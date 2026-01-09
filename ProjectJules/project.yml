@@ -50,7 +50,11 @@ targets:
         SWIFT_VERSION: "5.9"
         IPHONEOS_DEPLOYMENT_TARGET: "17.0"
         CODE_SIGN_STYLE: Automatic
-        DEVELOPMENT_TEAM: ""
+      configs:
+        Debug:
+          DEVELOPMENT_TEAM: ""
+        Release:
+          DEVELOPMENT_TEAM: ""
 packages:
   supabase-swift:
     url: https://github.com/supabase/supabase-swift
