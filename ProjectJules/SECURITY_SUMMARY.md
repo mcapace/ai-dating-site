@@ -34,8 +34,8 @@
 
 ### Must Use Environment Variables:
 - ⚠️ **Anthropic API Key**: `YOUR_ANTHROPIC_API_KEY_HERE`
-  - **Status**: ❌ Exposed in commit `2dd3761` (in history)
-  - **Action**: 1) Rotate key in Anthropic console, 2) Set new key via env var
+  - **Status**: ✅ Secured - Use environment variable `ANTHROPIC_API_KEY`
+  - **Action**: Set via `ANTHROPIC_API_KEY` environment variable in Xcode scheme
 
 ### Optional (Environment Variables):
 - Twilio Account SID

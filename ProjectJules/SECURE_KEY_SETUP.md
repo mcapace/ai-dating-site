@@ -66,8 +66,8 @@ If you can't use environment variables, you can add keys to Info.plist (but giti
    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
    <plist version="1.0">
    <dict>
-       <key>AnthropicAPIKey</key>
-       <string>YOUR_ANTHROPIC_API_KEY_HERE</string>
+      <key>AnthropicAPIKey</key>
+      <string>YOUR_ANTHROPIC_API_KEY_HERE</string>
    </dict>
    </plist>
    ```
