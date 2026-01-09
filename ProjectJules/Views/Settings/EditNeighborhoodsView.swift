@@ -17,7 +17,7 @@ struct EditNeighborhoodsView: View {
                 // Selected count
                 HStack {
                     Text("\(viewModel.selectedNeighborhoods.count) selected")
-                        .font(.julBody)
+                        .font(.julBody())
                         .foregroundColor(.julTextSecondary)
 
                     Spacer()
@@ -91,8 +91,8 @@ struct EditNeighborhoodsView: View {
 
 // MARK: - City Selector
 struct CitySelector: View {
-    let cities: [City]
-    @Binding var selectedCity: City?
+    let cities: [String]
+    @Binding var selectedCity: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
@@ -101,15 +101,15 @@ struct CitySelector: View {
                 .foregroundColor(.julTextSecondary)
 
             Menu {
-                ForEach(cities) { city in
-                    Button(city.name) {
+                ForEach(cities, id: \.self) { city in
+                    Button(city) {
                         selectedCity = city
                     }
                 }
             } label: {
                 HStack {
-                    Text(selectedCity?.name ?? "Select city")
-                        .font(.julBody)
+                    Text(selectedCity ?? "Select city")
+                        .font(.julBody())
                         .foregroundColor(selectedCity != nil ? .julTextPrimary : .julTextSecondary)
                     Spacer()
                     Image(systemName: "chevron.down")
@@ -188,14 +188,14 @@ struct NeighborhoodGroupSection: View {
 
 // MARK: - Neighborhood Chip
 struct NeighborhoodChip: View {
-    let neighborhood: Neighborhood
+    let neighborhood: SimpleNeighborhood
     let isSelected: Bool
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             Text(neighborhood.name)
-                .font(.julBody)
+                .font(.julBody())
                 .foregroundColor(isSelected ? .white : .julTextPrimary)
                 .padding(.horizontal, Spacing.md)
                 .padding(.vertical, Spacing.sm)
@@ -228,17 +228,25 @@ struct InfoCard: View {
     }
 }
 
+// MARK: - Simple Neighborhood Model (for this view only)
+struct SimpleNeighborhood: Identifiable {
+    let id: String
+    let cityId: String
+    let name: String
+    let isActive: Bool
+}
+
 // MARK: - Neighborhood Group Model
 struct NeighborhoodGroup {
     let name: String
-    let neighborhoods: [Neighborhood]
+    let neighborhoods: [SimpleNeighborhood]
 }
 
 // MARK: - View Model
 @MainActor
 class EditNeighborhoodsViewModel: ObservableObject {
-    @Published var availableCities: [City] = []
-    @Published var selectedCity: City?
+    @Published var availableCities: [String] = []
+    @Published var selectedCity: String?
     @Published var neighborhoodGroups: [NeighborhoodGroup] = []
     @Published var selectedNeighborhoods: Set<String> = []
 
@@ -247,62 +255,66 @@ class EditNeighborhoodsViewModel: ObservableObject {
     }
 
     private func loadData() {
+        // For now, only NYC is available
+        availableCities = ["New York City"]
+        selectedCity = "New York City"
+        
         // NYC neighborhoods grouped by area
         neighborhoodGroups = [
             NeighborhoodGroup(
                 name: "Manhattan - Downtown",
                 neighborhoods: [
-                    Neighborhood(id: "tribeca", cityId: "nyc", name: "Tribeca", isActive: true),
-                    Neighborhood(id: "soho", cityId: "nyc", name: "SoHo", isActive: true),
-                    Neighborhood(id: "west_village", cityId: "nyc", name: "West Village", isActive: true),
-                    Neighborhood(id: "east_village", cityId: "nyc", name: "East Village", isActive: true),
-                    Neighborhood(id: "lower_east_side", cityId: "nyc", name: "Lower East Side", isActive: true),
-                    Neighborhood(id: "financial_district", cityId: "nyc", name: "Financial District", isActive: true),
-                    Neighborhood(id: "chelsea", cityId: "nyc", name: "Chelsea", isActive: true),
-                    Neighborhood(id: "greenwich_village", cityId: "nyc", name: "Greenwich Village", isActive: true)
+                    SimpleNeighborhood(id: "tribeca", cityId: "nyc", name: "Tribeca", isActive: true),
+                    SimpleNeighborhood(id: "soho", cityId: "nyc", name: "SoHo", isActive: true),
+                    SimpleNeighborhood(id: "west_village", cityId: "nyc", name: "West Village", isActive: true),
+                    SimpleNeighborhood(id: "east_village", cityId: "nyc", name: "East Village", isActive: true),
+                    SimpleNeighborhood(id: "lower_east_side", cityId: "nyc", name: "Lower East Side", isActive: true),
+                    SimpleNeighborhood(id: "financial_district", cityId: "nyc", name: "Financial District", isActive: true),
+                    SimpleNeighborhood(id: "chelsea", cityId: "nyc", name: "Chelsea", isActive: true),
+                    SimpleNeighborhood(id: "greenwich_village", cityId: "nyc", name: "Greenwich Village", isActive: true)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Manhattan - Midtown",
                 neighborhoods: [
-                    Neighborhood(id: "midtown_east", cityId: "nyc", name: "Midtown East", isActive: true),
-                    Neighborhood(id: "midtown_west", cityId: "nyc", name: "Midtown West", isActive: true),
-                    Neighborhood(id: "hells_kitchen", cityId: "nyc", name: "Hell's Kitchen", isActive: true),
-                    Neighborhood(id: "gramercy", cityId: "nyc", name: "Gramercy", isActive: true),
-                    Neighborhood(id: "flatiron", cityId: "nyc", name: "Flatiron", isActive: true),
-                    Neighborhood(id: "murray_hill", cityId: "nyc", name: "Murray Hill", isActive: true)
+                    SimpleNeighborhood(id: "midtown_east", cityId: "nyc", name: "Midtown East", isActive: true),
+                    SimpleNeighborhood(id: "midtown_west", cityId: "nyc", name: "Midtown West", isActive: true),
+                    SimpleNeighborhood(id: "hells_kitchen", cityId: "nyc", name: "Hell's Kitchen", isActive: true),
+                    SimpleNeighborhood(id: "gramercy", cityId: "nyc", name: "Gramercy", isActive: true),
+                    SimpleNeighborhood(id: "flatiron", cityId: "nyc", name: "Flatiron", isActive: true),
+                    SimpleNeighborhood(id: "murray_hill", cityId: "nyc", name: "Murray Hill", isActive: true)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Manhattan - Uptown",
                 neighborhoods: [
-                    Neighborhood(id: "upper_east_side", cityId: "nyc", name: "Upper East Side", isActive: true),
-                    Neighborhood(id: "upper_west_side", cityId: "nyc", name: "Upper West Side", isActive: true),
-                    Neighborhood(id: "harlem", cityId: "nyc", name: "Harlem", isActive: true),
-                    Neighborhood(id: "morningside_heights", cityId: "nyc", name: "Morningside Heights", isActive: true)
+                    SimpleNeighborhood(id: "upper_east_side", cityId: "nyc", name: "Upper East Side", isActive: true),
+                    SimpleNeighborhood(id: "upper_west_side", cityId: "nyc", name: "Upper West Side", isActive: true),
+                    SimpleNeighborhood(id: "harlem", cityId: "nyc", name: "Harlem", isActive: true),
+                    SimpleNeighborhood(id: "morningside_heights", cityId: "nyc", name: "Morningside Heights", isActive: true)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Brooklyn",
                 neighborhoods: [
-                    Neighborhood(id: "williamsburg", cityId: "nyc", name: "Williamsburg", isActive: true),
-                    Neighborhood(id: "dumbo", cityId: "nyc", name: "DUMBO", isActive: true),
-                    Neighborhood(id: "brooklyn_heights", cityId: "nyc", name: "Brooklyn Heights", isActive: true),
-                    Neighborhood(id: "cobble_hill", cityId: "nyc", name: "Cobble Hill", isActive: true),
-                    Neighborhood(id: "park_slope", cityId: "nyc", name: "Park Slope", isActive: true),
-                    Neighborhood(id: "fort_greene", cityId: "nyc", name: "Fort Greene", isActive: true),
-                    Neighborhood(id: "greenpoint", cityId: "nyc", name: "Greenpoint", isActive: true),
-                    Neighborhood(id: "bushwick", cityId: "nyc", name: "Bushwick", isActive: true),
-                    Neighborhood(id: "prospect_heights", cityId: "nyc", name: "Prospect Heights", isActive: true)
+                    SimpleNeighborhood(id: "williamsburg", cityId: "nyc", name: "Williamsburg", isActive: true),
+                    SimpleNeighborhood(id: "dumbo", cityId: "nyc", name: "DUMBO", isActive: true),
+                    SimpleNeighborhood(id: "brooklyn_heights", cityId: "nyc", name: "Brooklyn Heights", isActive: true),
+                    SimpleNeighborhood(id: "cobble_hill", cityId: "nyc", name: "Cobble Hill", isActive: true),
+                    SimpleNeighborhood(id: "park_slope", cityId: "nyc", name: "Park Slope", isActive: true),
+                    SimpleNeighborhood(id: "fort_greene", cityId: "nyc", name: "Fort Greene", isActive: true),
+                    SimpleNeighborhood(id: "greenpoint", cityId: "nyc", name: "Greenpoint", isActive: true),
+                    SimpleNeighborhood(id: "bushwick", cityId: "nyc", name: "Bushwick", isActive: true),
+                    SimpleNeighborhood(id: "prospect_heights", cityId: "nyc", name: "Prospect Heights", isActive: true)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Other Boroughs",
                 neighborhoods: [
-                    Neighborhood(id: "astoria", cityId: "nyc", name: "Astoria", isActive: true),
-                    Neighborhood(id: "long_island_city", cityId: "nyc", name: "Long Island City", isActive: true),
-                    Neighborhood(id: "jersey_city", cityId: "nyc", name: "Jersey City", isActive: true),
-                    Neighborhood(id: "hoboken", cityId: "nyc", name: "Hoboken", isActive: true)
+                    SimpleNeighborhood(id: "astoria", cityId: "nyc", name: "Astoria", isActive: true),
+                    SimpleNeighborhood(id: "long_island_city", cityId: "nyc", name: "Long Island City", isActive: true),
+                    SimpleNeighborhood(id: "jersey_city", cityId: "nyc", name: "Jersey City", isActive: true),
+                    SimpleNeighborhood(id: "hoboken", cityId: "nyc", name: "Hoboken", isActive: true)
                 ]
             )
         ]
