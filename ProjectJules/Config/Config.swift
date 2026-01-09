@@ -15,7 +15,8 @@ enum Config {
     
     // MARK: - Anthropic (Claude AI)
     // Get this from: https://console.anthropic.com/ → API Keys → Create Key
-    static let anthropicAPIKey = "YOUR_ANTHROPIC_API_KEY"
+    // IMPORTANT: Never commit real API keys to git! Use environment variables or secure storage.
+    static let anthropicAPIKey = "YOUR_ANTHROPIC_API_KEY" // TODO: Replace with actual key or use environment variable
     static let anthropicModel = "claude-sonnet-4-20250514"
     
     // MARK: - App Settings
