@@ -97,7 +97,7 @@ class JulesService: ObservableObject {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
-        request.setValue("anthropic-version", forHTTPHeaderField: "2023-06-01")
+        request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let body = ClaudeRequest(
