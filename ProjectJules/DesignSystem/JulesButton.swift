@@ -18,10 +18,10 @@ enum ButtonStyle {
 struct JulesButton: View {
     let title: String
     let style: ButtonStyle
-    let action: () -> Void
     var isLoading: Bool = false
     var isDisabled: Bool = false
     var icon: String? = nil
+    let action: () -> Void
     
     var body: some View {
         Button(action: action) {
