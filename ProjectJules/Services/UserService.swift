@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Supabase
 
 // MARK: - User Service
 class UserService {
@@ -22,29 +23,28 @@ class UserService {
     func createProfile(
         userId: String,
         firstName: String,
-        birthdate: Date,
+        birthDate: Date,
         gender: Gender
     ) async throws -> UserProfile {
         let profile = UserProfile(
             id: UUID().uuidString,
             userId: userId,
             firstName: firstName,
-            birthdate: birthdate,
+            birthDate: birthDate,
             gender: gender,
             heightInches: nil,
             hasChildren: nil,
-            wantsChildren: nil,
             occupation: nil,
-            education: nil,
-            religion: nil,
-            ethnicity: nil,
             bio: nil,
+            ethnicity: nil,
+            religion: nil,
+            wantsChildren: nil,
             createdAt: Date(),
             updatedAt: Date()
         )
 
         try await supabase
-            .from(.userProfiles)
+            .from(.profiles)
             .insert(profile)
             .execute()
 
@@ -57,7 +57,7 @@ class UserService {
         updatedProfile.updatedAt = Date()
 
         try await supabase
-            .from(.userProfiles)
+            .from(.profiles)
             .update(updatedProfile)
             .eq("id", value: profile.id)
             .execute()
@@ -66,7 +66,7 @@ class UserService {
     /// Get user profile
     func getProfile(userId: String) async throws -> UserProfile {
         let profile: UserProfile = try await supabase
-            .from(.userProfiles)
+            .from(.profiles)
             .select()
             .eq("user_id", value: userId)
             .single()
@@ -89,14 +89,14 @@ class UserService {
         let filename = "\(userId)/\(UUID().uuidString).jpg"
 
         // Upload to storage
-        try await supabase.storage(.photos).upload(
+        try await supabase.storage(.avatars).upload(
             path: filename,
             file: imageData,
             options: FileOptions(contentType: "image/jpeg")
         )
 
         // Get public URL
-        let publicURL = try supabase.storage(.photos).getPublicURL(path: filename)
+        let publicURL = try supabase.storage(.avatars).getPublicURL(path: filename)
 
         // Create photo record
         let photo = UserPhoto(
@@ -104,12 +104,12 @@ class UserService {
             userId: userId,
             url: publicURL.absoluteString,
             position: position,
-            isPrimary: position == 1,
+            isPrimary: position == 0,
             createdAt: Date()
         )
 
         try await supabase
-            .from(.userPhotos)
+            .from(.photos)
             .insert(photo)
             .execute()
 
@@ -119,7 +119,7 @@ class UserService {
     /// Get user photos
     func getPhotos(userId: String) async throws -> [UserPhoto] {
         let photos: [UserPhoto] = try await supabase
-            .from(.userPhotos)
+            .from(.photos)
             .select()
             .eq("user_id", value: userId)
             .order("position")
@@ -133,11 +133,11 @@ class UserService {
     func deletePhoto(_ photo: UserPhoto) async throws {
         // Delete from storage
         let filename = extractFilename(from: photo.url)
-        try await supabase.storage(.photos).remove(paths: [filename])
+        try await supabase.storage(.avatars).remove(paths: [filename])
 
         // Delete record
         try await supabase
-            .from(.userPhotos)
+            .from(.photos)
             .delete()
             .eq("id", value: photo.id)
             .execute()
@@ -147,11 +147,11 @@ class UserService {
     func reorderPhotos(_ photos: [UserPhoto]) async throws {
         for (index, photo) in photos.enumerated() {
             var updatedPhoto = photo
-            updatedPhoto.position = index + 1
+            updatedPhoto.position = index
             updatedPhoto.isPrimary = index == 0
 
             try await supabase
-                .from(.userPhotos)
+                .from(.photos)
                 .update(updatedPhoto)
                 .eq("id", value: photo.id)
                 .execute()
@@ -176,13 +176,13 @@ class UserService {
             heightMinInches: nil,
             heightMaxInches: nil,
             childrenPreference: .noPreference,
-            distanceMaxMiles: nil,
+            distanceMaxMiles: 25,
             createdAt: Date(),
             updatedAt: Date()
         )
 
         try await supabase
-            .from(.userPreferences)
+            .from(.preferences)
             .insert(preferences)
             .execute()
 
@@ -195,7 +195,7 @@ class UserService {
         updated.updatedAt = Date()
 
         try await supabase
-            .from(.userPreferences)
+            .from(.preferences)
             .update(updated)
             .eq("id", value: preferences.id)
             .execute()
@@ -204,7 +204,7 @@ class UserService {
     /// Get preferences
     func getPreferences(userId: String) async throws -> UserPreferences {
         let preferences: UserPreferences = try await supabase
-            .from(.userPreferences)
+            .from(.preferences)
             .select()
             .eq("user_id", value: userId)
             .single()
@@ -217,7 +217,7 @@ class UserService {
     // MARK: - Neighborhoods Management
 
     /// Set user neighborhoods
-    func setNeighborhoods(userId: String, neighborhoodIds: [String], forWeekend: Bool = false) async throws {
+    func setNeighborhoods(userId: String, neighborhoodIds: [String]) async throws {
         // Delete existing
         try await supabase
             .from(.userNeighborhoods)
@@ -236,10 +236,12 @@ class UserService {
             )
         }
 
-        try await supabase
-            .from(.userNeighborhoods)
-            .insert(neighborhoods)
-            .execute()
+        if !neighborhoods.isEmpty {
+            try await supabase
+                .from(.userNeighborhoods)
+                .insert(neighborhoods)
+                .execute()
+        }
     }
 
     /// Get user neighborhoods
@@ -286,22 +288,12 @@ class NeighborhoodService {
     private init() {}
 
     /// Get all neighborhoods for a city
-    func getNeighborhoods(cityCode: String) async throws -> [Neighborhood] {
-        // First get city
-        let city: City = try await supabase
-            .from(.cities)
-            .select()
-            .eq("code", value: cityCode)
-            .single()
-            .execute()
-            .value
-
-        // Then get neighborhoods
+    func getNeighborhoods(cityId: String) async throws -> [Neighborhood] {
         let neighborhoods: [Neighborhood] = try await supabase
             .from(.neighborhoods)
             .select()
-            .eq("city_id", value: city.id)
-            .order("display_name")
+            .eq("city_id", value: cityId)
+            .order("name")
             .execute()
             .value
 
@@ -319,5 +311,17 @@ class NeighborhoodService {
             .value
 
         return neighborhood
+    }
+
+    /// Get all active cities
+    func getCities() async throws -> [City] {
+        let cities: [City] = try await supabase
+            .from(.cities)
+            .select()
+            .eq("is_active", value: true)
+            .execute()
+            .value
+
+        return cities
     }
 }

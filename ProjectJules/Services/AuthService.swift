@@ -93,6 +93,7 @@ class AuthService: ObservableObject {
                 type: .sms
             )
 
+            // response.user is not optional in the current SDK
             await handleSignIn(userId: response.user.id.uuidString)
         } catch {
             self.error = .verificationFailed(error.localizedDescription)
@@ -132,7 +133,7 @@ class AuthService: ObservableObject {
 
             // Fetch profile if exists
             if let profile: UserProfile = try? await SupabaseManager.shared
-                .from(.userProfiles)
+                .from(.profiles)
                 .select()
                 .eq("user_id", value: userId)
                 .single()
@@ -149,7 +150,8 @@ class AuthService: ObservableObject {
     // MARK: - Create New User
     private func createNewUser(userId: String) async {
         do {
-            let phone = try await supabase.auth.session.user.phone ?? ""
+            let session = try await supabase.auth.session
+            let phone = session.user.phone ?? ""
 
             let newUser = User(
                 id: userId,
