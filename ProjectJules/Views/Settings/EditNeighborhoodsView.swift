@@ -26,7 +26,7 @@ struct EditNeighborhoodsView: View {
                         Button("Clear all") {
                             viewModel.clearAll()
                         }
-                        .font(.julBody()mall)
+                        .font(.julBodySmall())
                         .foregroundColor(.julTerracotta)
                     }
                 }
