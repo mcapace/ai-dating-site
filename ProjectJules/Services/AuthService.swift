@@ -76,7 +76,7 @@ class AuthService: ObservableObject {
     
     private func loadUser(userId: UUID) async {
         do {
-            let response: User = try await supabase.client.database
+            let response: User = try await supabase.client
                 .from("users")
                 .select()
                 .eq("id", value: userId.uuidString)

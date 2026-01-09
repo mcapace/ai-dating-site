@@ -69,7 +69,7 @@ struct PhoneInputView: View {
                 placeholder: "(555) 123-4567",
                 keyboardType: .phonePad
             )
-            .onChange(of: formattedPhone) { newValue in
+            .onChange(of: formattedPhone) { oldValue, newValue in
                 phoneNumber = newValue.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
                 formattedPhone = formatPhoneNumber(phoneNumber)
             }
