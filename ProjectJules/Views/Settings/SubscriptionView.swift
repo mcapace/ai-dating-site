@@ -87,13 +87,19 @@ struct CurrentPlanCard: View {
         VStack(spacing: Spacing.md) {
             // Plan Icon
             ZStack {
-                Circle()
-                    .fill(tier == .free ? Color.julCream : LinearGradient(
-                        colors: [Color.julTerracotta, Color(red: 0.9, green: 0.5, blue: 0.4)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ))
-                    .frame(width: 64, height: 64)
+                if tier == .free {
+                    Circle()
+                        .fill(Color.julCream)
+                        .frame(width: 64, height: 64)
+                } else {
+                    Circle()
+                        .fill(LinearGradient(
+                            colors: [Color.julTerracotta, Color(red: 0.9, green: 0.5, blue: 0.4)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ))
+                        .frame(width: 64, height: 64)
+                }
 
                 Image(systemName: tier == .free ? "person.fill" : "crown.fill")
                     .font(.system(size: 28))
@@ -329,7 +335,7 @@ struct ManageSubscriptionSection: View {
             Button(action: onCancel) {
                 Text("Cancel Subscription")
                     .font(.julBody())
-                    .foregroundColor(.julMutedRed)
+                    .foregroundColor(.julError)
             }
         }
     }

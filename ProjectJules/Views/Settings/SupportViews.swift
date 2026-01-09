@@ -78,7 +78,7 @@ struct SafetyTipsView: View {
                         Link(destination: URL(string: "tel:911")!) {
                             HStack {
                                 Image(systemName: "phone.fill")
-                                    .foregroundColor(.julMutedRed)
+                                    .foregroundColor(.julError)
                                 Text("Emergency: 911")
                                     .font(.julBody())
                                     .foregroundColor(.julTextPrimary)
