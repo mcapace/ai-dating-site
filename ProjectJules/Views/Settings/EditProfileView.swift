@@ -270,13 +270,7 @@ struct EditTextField: View {
     @Binding var text: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.xs) {
-            Text(label)
-                .font(.julLabelSmall())
-                .foregroundColor(.julTextSecondary)
-
-            JulesTextField(placeholder: label, text: $text)
-        }
+        JulesTextField(title: label, text: $text, placeholder: label)
     }
 }
 
@@ -294,7 +288,7 @@ struct EditFieldButton: View {
             Button(action: action) {
                 HStack {
                     Text(value)
-                        .font(.julBody)
+                        .font(.julBody())
                         .foregroundColor(.julTextPrimary)
                     Spacer()
                     Image(systemName: "chevron.right")
@@ -331,11 +325,11 @@ struct EditPicker<T: Hashable>: View {
                 HStack {
                     if let selected = selection {
                         Text(displayString(for: selected))
-                            .font(.julBody)
+                            .font(.julBody())
                             .foregroundColor(.julTextPrimary)
                     } else {
                         Text("Select")
-                            .font(.julBody)
+                            .font(.julBody())
                             .foregroundColor(.julTextSecondary)
                     }
                     Spacer()
@@ -368,7 +362,7 @@ struct EditToggle: View {
     var body: some View {
         HStack {
             Text(label)
-                .font(.julBody)
+                .font(.julBody())
                 .foregroundColor(.julTextPrimary)
 
             Spacer()
