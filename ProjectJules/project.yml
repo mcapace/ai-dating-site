@@ -19,11 +19,8 @@ targets:
       - path: Views
       - path: Config
     resources:
-      - path: Assets/Fonts/Inter-Medium.ttf
-      - path: Assets/Fonts/Inter-Regular.ttf
-      - path: Assets/Fonts/Inter-SemiBold.ttf
-      - path: Assets/Fonts/PlayfairDisplay-Regular.ttf
-      - path: Assets/Fonts/PlayfairDisplay-SemiBold.ttf
+      - path: Assets
+        type: folder
     info:
       path: Info.plist
       properties:
