@@ -23,22 +23,23 @@ class UserService {
     func createProfile(
         userId: String,
         firstName: String,
-        birthDate: Date,
+        birthdate: Date,
         gender: Gender
     ) async throws -> UserProfile {
         let profile = UserProfile(
             id: UUID().uuidString,
             userId: userId,
             firstName: firstName,
-            birthDate: birthDate,
+            birthdate: birthdate,
             gender: gender,
             heightInches: nil,
             hasChildren: nil,
-            occupation: nil,
-            bio: nil,
-            ethnicity: nil,
-            religion: nil,
             wantsChildren: nil,
+            occupation: nil,
+            education: nil,
+            religion: nil,
+            ethnicity: nil,
+            bio: nil,
             createdAt: Date(),
             updatedAt: Date()
         )

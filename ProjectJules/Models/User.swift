@@ -82,6 +82,10 @@ struct UserProfile: Codable, Identifiable, Equatable {
         return "\(feet)'\(remainingInches)\""
     }
 
+    // Note: primaryPhotoURL should be fetched separately from photos table
+    // This is a placeholder for UI convenience
+    var primaryPhotoURL: String? { nil }
+
     enum CodingKeys: String, CodingKey {
         case id
         case userId = "user_id"
@@ -118,15 +122,19 @@ enum Gender: String, Codable, CaseIterable {
 enum WantsChildren: String, Codable, CaseIterable {
     case yes
     case no
-    case maybe
+    case someday
+    case not_sure
 
     var displayName: String {
         switch self {
         case .yes: return "Yes"
         case .no: return "No"
-        case .maybe: return "Maybe someday"
+        case .someday: return "Someday"
+        case .not_sure: return "Not sure"
         }
     }
+
+    var displayValue: String { displayName }
 }
 
 // MARK: - User Photos

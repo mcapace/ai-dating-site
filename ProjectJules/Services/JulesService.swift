@@ -213,7 +213,7 @@ class JulesService {
         )
 
         try await supabase
-            .from(.julesLearnedPreferences)
+            .from(.learnedPreferences)
             .insert(preference)
             .execute()
     }
@@ -221,7 +221,7 @@ class JulesService {
     /// Get learned preferences
     func getLearnedPreferences(userId: String) async throws -> [LearnedPreference] {
         let preferences: [LearnedPreference] = try await supabase
-            .from(.julesLearnedPreferences)
+            .from(.learnedPreferences)
             .select()
             .eq("user_id", value: userId)
             .order("confidence", ascending: false)
@@ -239,7 +239,7 @@ class JulesService {
         var profile: UserCommunicationProfile
 
         if let existing: UserCommunicationProfile = try? await supabase
-            .from(.userCommunicationProfiles)
+            .from(.communicationProfiles)
             .select()
             .eq("user_id", value: userId)
             .single()
@@ -267,7 +267,7 @@ class JulesService {
         profile.updatedAt = Date()
 
         try await supabase
-            .from(.userCommunicationProfiles)
+            .from(.communicationProfiles)
             .upsert(profile)
             .execute()
     }
@@ -309,8 +309,8 @@ struct JulesContext {
 class AnthropicAPI {
     static let shared = AnthropicAPI()
 
-    // TODO: Move to secure config
-    private let apiKey = "YOUR_ANTHROPIC_API_KEY"
+    private let apiKey = Config.anthropicAPIKey
+    private let model = Config.anthropicModel
     private let apiURL = URL(string: "https://api.anthropic.com/v1/messages")!
 
     private init() {}
@@ -377,7 +377,7 @@ class AnthropicAPI {
         request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
 
         let body: [String: Any] = [
-            "model": "claude-sonnet-4-20250514",
+            "model": model,
             "max_tokens": 1024,
             "system": systemPrompt,
             "messages": messages

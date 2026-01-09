@@ -257,7 +257,7 @@ struct ProfileView: View {
                         }
 
                         // Subscription badge
-                        if authService.currentProfile?.subscriptionTier == .premium {
+                        if authService.currentUser?.subscriptionTier == .premium {
                             HStack(spacing: 4) {
                                 Image(systemName: "crown.fill")
                                     .font(.system(size: 12))
