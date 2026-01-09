@@ -452,7 +452,7 @@ class EditProfileViewModel: ObservableObject {
         // Load from AuthService
         if let profile = AuthService.shared.currentProfile {
             firstName = profile.firstName
-            birthDate = profile.birthDate
+            birthDate = profile.birthdate
             gender = profile.gender
             heightInches = profile.heightInches
             occupation = profile.occupation ?? ""
