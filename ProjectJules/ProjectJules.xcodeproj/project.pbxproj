@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -62,7 +62,7 @@
 		A34120A38EAD70F4C5C1598B /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		AB721F42314FF1AE54E24583 /* JulesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JulesService.swift; sourceTree = "<group>"; };
 		ACE1809D4638CC7495B7E2D8 /* JulesConversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JulesConversation.swift; sourceTree = "<group>"; };
-		B865E75F9A1E30311C354BC3 /* ProjectJules.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ProjectJules.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B865E75F9A1E30311C354BC3 /* ProjectJules.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectJules.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9C0858E55E16D245A39B8DD /* JulesChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JulesChat.swift; sourceTree = "<group>"; };
 		C1DEF7A84F4C598044F0A16F /* MeetJulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetJulesView.swift; sourceTree = "<group>"; };
 		C571701A161F1A40D4BEB3CF /* IntroDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroDetailView.swift; sourceTree = "<group>"; };
@@ -254,7 +254,6 @@
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					35788990370E2DB6C867100A = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -272,7 +271,6 @@
 			packageReferences = (
 				0FCEF84016C60B932EC5052C /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -385,7 +383,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8U6V3PNEAC;
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -406,7 +404,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8U6V3PNEAC;
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
