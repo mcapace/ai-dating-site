@@ -80,7 +80,7 @@ struct SubscriptionView: View {
 
 // MARK: - Current Plan Card
 struct CurrentPlanCard: View {
-    let tier: SubscriptionTier
+    let tier: User.SubscriptionTier
     let renewalDate: Date?
 
     var body: some View {
@@ -88,7 +88,11 @@ struct CurrentPlanCard: View {
             // Plan Icon
             ZStack {
                 Circle()
-                    .fill(tier == .free ? Color.julCream : LinearGradient.julPremiumGradient)
+                    .fill(tier == .free ? Color.julCream : LinearGradient(
+                        colors: [Color.julTerracotta, Color(red: 0.9, green: 0.5, blue: 0.4)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ))
                     .frame(width: 64, height: 64)
 
                 Image(systemName: tier == .free ? "person.fill" : "crown.fill")
@@ -97,20 +101,20 @@ struct CurrentPlanCard: View {
             }
 
             // Plan Name
-            Text(tier.displayName)
+            Text(tier == .free ? "Free" : "Premium")
                 .font(.julHeadline2())
                 .foregroundColor(.julTextPrimary)
 
             // Status
             if tier == .free {
                 Text("Upgrade to unlock premium features")
-                    .font(.julBody)
+                    .font(.julBody())
                     .foregroundColor(.julTextSecondary)
                     .multilineTextAlignment(.center)
             } else if let renewalDate = renewalDate {
                 let formatter = DateFormatter()
                 Text("Renews \(formatter.string(from: renewalDate))")
-                    .font(.julBody)
+                    .font(.julBody())
                     .foregroundColor(.julTextSecondary)
             }
         }
@@ -283,7 +287,7 @@ struct BenefitRow: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.julBody)
+                    .font(.julBody())
                     .foregroundColor(.julTextPrimary)
 
                 Text(description)
@@ -310,7 +314,7 @@ struct ManageSubscriptionSection: View {
             }) {
                 HStack {
                     Text("Manage in App Store")
-                        .font(.julBody)
+                        .font(.julBody())
                         .foregroundColor(.julTextPrimary)
                     Spacer()
                     Image(systemName: "arrow.up.right")
@@ -324,7 +328,7 @@ struct ManageSubscriptionSection: View {
 
             Button(action: onCancel) {
                 Text("Cancel Subscription")
-                    .font(.julBody)
+                    .font(.julBody())
                     .foregroundColor(.julMutedRed)
             }
         }
@@ -356,13 +360,13 @@ struct PaymentSheet: View {
                             .foregroundColor(.julTerracotta)
 
                         Text(plan.period)
-                            .font(.julBody)
+                            .font(.julBody())
                             .foregroundColor(.julTextSecondary)
                     }
 
                     if let savings = plan.savings {
                         Text(savings)
-                            .font(.julBody)
+                            .font(.julBody())
                             .foregroundColor(.julSage)
                             .padding(.horizontal, Spacing.md)
                             .padding(.vertical, Spacing.xs)
@@ -417,7 +421,7 @@ struct PaymentSheet: View {
 // MARK: - View Model
 @MainActor
 class SubscriptionViewModel: ObservableObject {
-    @Published var currentTier: SubscriptionTier = .free
+    @Published var currentTier: User.SubscriptionTier = .free
     @Published var renewalDate: Date?
     @Published var selectedPlan: SubscriptionPlan?
     @Published var showPaymentSheet = false
