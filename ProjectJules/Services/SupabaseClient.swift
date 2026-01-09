@@ -10,9 +10,8 @@ import Supabase
 
 // MARK: - Supabase Configuration
 enum SupabaseConfig {
-    // TODO: Move these to environment variables or secure config
-    static let url = URL(string: "YOUR_SUPABASE_URL")!
-    static let anonKey = "YOUR_SUPABASE_ANON_KEY"
+    static let url = URL(string: Config.supabaseURL)!
+    static let anonKey = Config.supabaseAnonKey
 }
 
 // MARK: - Supabase Client Singleton
@@ -31,20 +30,19 @@ class SupabaseManager {
     // MARK: - Database Tables
     enum Table: String {
         case users
-        case userProfiles = "user_profiles"
-        case userPhotos = "user_photos"
-        case userPreferences = "user_preferences"
+        case profiles
+        case photos
+        case preferences
         case userNeighborhoods = "user_neighborhoods"
         case neighborhoods
         case cities
         case julesConversations = "jules_conversations"
         case julesMessages = "jules_messages"
-        case julesLearnedPreferences = "jules_learned_preferences"
-        case userCommunicationProfiles = "user_communication_profiles"
+        case learnedPreferences = "learned_preferences"
+        case communicationProfiles = "communication_profiles"
         case matches
         case intros
-        case sparkExchanges = "spark_exchanges"
-        case introMessages = "intro_messages"
+        case sparkResponses = "spark_responses"
         case userAvailability = "user_availability"
         case venues
         case dateFeedback = "date_feedback"
@@ -54,16 +52,19 @@ class SupabaseManager {
 
     // MARK: - Storage Buckets
     enum Bucket: String {
-        case photos = "user-photos"
+        case avatars
         case voiceNotes = "voice-notes"
     }
 }
 
 // MARK: - Database Query Helpers
 extension SupabaseManager {
+    var database: PostgrestClient {
+        client.from("")  // We'll use from() directly
+    }
 
     func from(_ table: Table) -> PostgrestQueryBuilder {
-        client.database.from(table.rawValue)
+        client.from(table.rawValue)
     }
 
     func storage(_ bucket: Bucket) -> StorageFileApi {
