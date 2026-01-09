@@ -25,12 +25,8 @@ class AuthService: ObservableObject {
         Task {
             do {
                 let session = try await supabase.auth.session
-                if let user = session.user {
-                    await loadUser(userId: user.id)
-                } else {
-                    isAuthenticated = false
-                    currentUser = nil
-                }
+                await loadUser(userId: session.user.id)
+                isAuthenticated = true
             } catch {
                 isAuthenticated = false
                 currentUser = nil
@@ -61,10 +57,8 @@ class AuthService: ObservableObject {
             let phoneFormatted = formatPhone(phone)
             let session = try await supabase.auth.verifyOTP(phone: phoneFormatted, token: token, type: .sms)
             
-            if let user = session.user {
-                await loadUser(userId: user.id)
-                isAuthenticated = true
-            }
+            await loadUser(userId: session.user.id)
+            isAuthenticated = true
             
             isLoading = false
         } catch {

@@ -12,18 +12,10 @@ import Supabase
 class UserService: ObservableObject {
     private let supabase = SupabaseManager.shared
     
-    // Convenience accessors for database and storage
-    private var database: SupabaseClient.Database {
-        supabase.client.database
-    }
-    private var storage: SupabaseClient.Storage {
-        supabase.client.storage
-    }
-    
     // MARK: - Profile Management
     
     func createProfile(userId: UUID, profile: UserProfile) async throws -> UserProfile {
-        let response: UserProfile = try await database
+        let response: UserProfile = try await supabase.client.database
             .from("user_profiles")
             .insert(profile)
             .select()
@@ -35,7 +27,7 @@ class UserService: ObservableObject {
     }
     
     func updateProfile(userId: UUID, profile: UserProfile) async throws -> UserProfile {
-        let response: UserProfile = try await database
+        let response: UserProfile = try await supabase.client.database
             .from("user_profiles")
             .update(profile)
             .eq("user_id", value: userId.uuidString)
@@ -48,7 +40,7 @@ class UserService: ObservableObject {
     }
     
     func getProfile(userId: UUID) async throws -> UserProfile? {
-        let response: [UserProfile] = try await supabase.database
+        let response: [UserProfile] = try await supabase.client.database
             .from("user_profiles")
             .select()
             .eq("user_id", value: userId.uuidString)
@@ -62,7 +54,7 @@ class UserService: ObservableObject {
     // MARK: - Preferences
     
     func updatePreferences(userId: UUID, preferences: UserPreferences) async throws -> UserPreferences {
-        let response: UserPreferences = try await supabase.database
+        let response: UserPreferences = try await supabase.client.database
             .from("user_preferences")
             .upsert(preferences)
             .eq("user_id", value: userId.uuidString)
@@ -75,7 +67,7 @@ class UserService: ObservableObject {
     }
     
     func getPreferences(userId: UUID) async throws -> UserPreferences? {
-        let response: [UserPreferences] = try await supabase.database
+        let response: [UserPreferences] = try await supabase.client.database
             .from("user_preferences")
             .select()
             .eq("user_id", value: userId.uuidString)
@@ -91,12 +83,12 @@ class UserService: ObservableObject {
     func uploadPhoto(userId: UUID, imageData: Data, fileName: String) async throws -> UserPhoto {
         // Upload to storage
         let filePath = "\(userId.uuidString)/\(fileName)"
-        try await storage
+        try await supabase.client.storage
             .from("avatars")
             .upload(path: filePath, file: imageData)
         
         // Get public URL
-        let url = try storage
+        let url = try supabase.client.storage
             .from("avatars")
             .getPublicURL(path: filePath)
         
@@ -111,7 +103,7 @@ class UserService: ObservableObject {
             createdAt: Date()
         )
         
-        let response: UserPhoto = try await supabase.database
+        let response: UserPhoto = try await supabase.client.database
             .from("user_photos")
             .insert(photo)
             .select()
@@ -123,7 +115,7 @@ class UserService: ObservableObject {
     }
     
     func getPhotos(userId: UUID) async throws -> [UserPhoto] {
-        let response: [UserPhoto] = try await supabase.database
+        let response: [UserPhoto] = try await supabase.client.database
             .from("user_photos")
             .select()
             .eq("user_id", value: userId.uuidString)
@@ -136,7 +128,7 @@ class UserService: ObservableObject {
     
     func deletePhoto(photoId: UUID) async throws {
         // Get photo to delete from storage
-        let photo: UserPhoto = try await supabase.database
+        let photo: UserPhoto = try await supabase.client.database
             .from("user_photos")
             .select()
             .eq("id", value: photoId.uuidString)
@@ -145,12 +137,12 @@ class UserService: ObservableObject {
             .value
         
         // Delete from storage
-        try await storage
+        try await supabase.client.storage
             .from("avatars")
             .remove(paths: [photo.storagePath])
         
         // Delete from database
-        try await supabase.database
+        try await supabase.client.database
             .from("user_photos")
             .delete()
             .eq("id", value: photoId.uuidString)
@@ -160,7 +152,7 @@ class UserService: ObservableObject {
     // MARK: - Neighborhoods
     
     func getNeighborhoods(city: String) async throws -> [Neighborhood] {
-        let response: [Neighborhood] = try await supabase.database
+        let response: [Neighborhood] = try await supabase.client.database
             .from("neighborhoods")
             .select()
             .eq("city", value: city)
@@ -178,14 +170,14 @@ class UserService: ObservableObject {
             createdAt: Date()
         )
         
-        try await supabase.database
+        try await supabase.client.database
             .from("user_neighborhoods")
             .insert(userNeighborhood)
             .execute()
     }
     
     func getUserNeighborhoods(userId: UUID) async throws -> [Neighborhood] {
-        let response: [Neighborhood] = try await supabase.database
+        let response: [Neighborhood] = try await supabase.client.database
             .from("user_neighborhoods")
             .select("neighborhoods(*)")
             .eq("user_id", value: userId.uuidString)
