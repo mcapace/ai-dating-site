@@ -16,7 +16,9 @@ struct ProjectJulesApp: App {
         WindowGroup {
             ZStack {
                 if showSplash {
-                    SplashView()
+                    SplashView(onComplete: {
+                        showSplash = false
+                    })
                         .onAppear {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                 withAnimation {
@@ -47,28 +49,4 @@ struct ContentView: View {
     }
 }
 
-struct SplashView: View {
-    var body: some View {
-        ZStack {
-            Color.julBackground
-                .ignoresSafeArea()
-            
-            VStack(spacing: Spacing.lg) {
-                // Logo placeholder
-                RoundedRectangle(cornerRadius: Radius.xl)
-                    .fill(Color.julTerracotta)
-                    .frame(width: 120, height: 120)
-                    .overlay(
-                        Text("J")
-                            .font(.system(size: 72, weight: .bold))
-                            .foregroundColor(.white)
-                    )
-                
-                Text("Jules")
-                    .font(.julHeadline1())
-                    .foregroundColor(.julTextPrimary)
-            }
-        }
-    }
-}
 

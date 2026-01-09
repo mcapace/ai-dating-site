@@ -23,7 +23,7 @@ struct SplashView: View {
             Color.julCream
                 .ignoresSafeArea()
 
-            VStack(spacing: JulesSpacing.lg) {
+            VStack(spacing: Spacing.lg) {
                 // Animated Logo Container
                 ZStack {
                     // Outer glow ring
@@ -48,7 +48,10 @@ struct SplashView: View {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [Color(hex: "F7E6DC"), Color(hex: "E6D5C8")],
+                                colors: [
+                                    Color(red: 0.97, green: 0.90, blue: 0.86),
+                                    Color(red: 0.90, green: 0.84, blue: 0.78)
+                                ],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -83,14 +86,14 @@ struct SplashView: View {
                 .opacity(logoOpacity)
 
                 // App Name
-                VStack(spacing: JulesSpacing.xs) {
+                VStack(spacing: Spacing.xs) {
                     Text("Jules")
                         .font(.system(size: 32, weight: .semibold, design: .serif))
-                        .foregroundColor(.julWarmBlack)
+                        .foregroundColor(.julTextPrimary)
 
                     Text("Your AI Matchmaker")
-                        .font(.julBody)
-                        .foregroundColor(.julWarmGray)
+                        .font(.julBody())
+                        .foregroundColor(.julTextSecondary)
                 }
                 .opacity(taglineOpacity)
             }
@@ -150,7 +153,10 @@ struct AnimatedJulesLogo: View {
             Circle()
                 .fill(
                     LinearGradient(
-                        colors: [Color(hex: "F7E6DC"), Color(hex: "E6D5C8")],
+                        colors: [
+                            Color(red: 0.97, green: 0.90, blue: 0.86),
+                            Color(red: 0.90, green: 0.84, blue: 0.78)
+                        ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )

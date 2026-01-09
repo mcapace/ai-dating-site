@@ -16,7 +16,7 @@ struct EditProfileView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: JulesSpacing.lg) {
+                VStack(spacing: Spacing.lg) {
                     // Photos Section
                     PhotosEditSection(
                         photos: $viewModel.photos,
@@ -26,20 +26,23 @@ struct EditProfileView: View {
 
                     // Basic Info
                     SectionCard(title: "Basic Info") {
-                        VStack(spacing: JulesSpacing.md) {
+                        VStack(spacing: Spacing.md) {
                             EditTextField(label: "First name", text: $viewModel.firstName)
 
                             EditFieldButton(label: "Birthday", value: viewModel.formattedBirthday) {
                                 viewModel.showDatePicker = true
                             }
 
-                            EditPicker(label: "Gender", selection: $viewModel.gender, options: Gender.allCases)
+                            EditTextField(label: "Gender", text: Binding(
+                                get: { viewModel.gender ?? "" },
+                                set: { viewModel.gender = $0.isEmpty ? nil : $0 }
+                            ))
                         }
                     }
 
                     // More Details
                     SectionCard(title: "More About Me") {
-                        VStack(spacing: JulesSpacing.md) {
+                        VStack(spacing: Spacing.md) {
                             EditPicker(label: "Height", selection: $viewModel.heightInches, options: Array(54...84)) { inches in
                                 formatHeight(inches)
                             }
@@ -48,7 +51,10 @@ struct EditProfileView: View {
 
                             EditToggle(label: "Have children", isOn: $viewModel.hasChildren)
 
-                            EditPicker(label: "Want children", selection: $viewModel.wantsChildren, options: WantsChildren.allCases)
+                            EditTextField(label: "Want children", text: Binding(
+                                get: { viewModel.wantsChildren ?? "" },
+                                set: { viewModel.wantsChildren = $0.isEmpty ? nil : $0 }
+                            ))
 
                             EditTextField(label: "Ethnicity", text: $viewModel.ethnicity)
 
@@ -58,15 +64,21 @@ struct EditProfileView: View {
 
                     // Bio
                     SectionCard(title: "About Me") {
-                        JulesTextArea(
-                            placeholder: "Share a bit about yourself...",
-                            text: $viewModel.bio,
-                            characterLimit: 500
-                        )
+                        TextEditor(text: $viewModel.bio)
+                            .font(.julBody())
+                            .foregroundColor(.julTextPrimary)
+                            .frame(minHeight: 100)
+                            .padding(Spacing.sm)
+                            .background(Color.julCream)
+                            .cornerRadius(Radius.md)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: Radius.md)
+                                    .stroke(Color.julBorder, lineWidth: 1)
+                            )
                     }
                 }
-                .padding(.horizontal, JulesSpacing.screen)
-                .padding(.vertical, JulesSpacing.md)
+                .padding(.horizontal, Spacing.lg)
+                .padding(.vertical, Spacing.md)
             }
             .background(Color.julCream)
             .navigationTitle("My Info")
@@ -74,7 +86,7 @@ struct EditProfileView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") { dismiss() }
-                        .foregroundColor(.julWarmGray)
+                        .foregroundColor(.julTextSecondary)
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -84,7 +96,7 @@ struct EditProfileView: View {
                             dismiss()
                         }
                     }
-                    .font(.julButton)
+                    .font(.julButton())
                     .foregroundColor(.julTerracotta)
                     .disabled(!viewModel.hasChanges)
                 }
@@ -123,16 +135,16 @@ struct PhotosEditSection: View {
     ]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
             Text("Photos")
-                .font(.julTitle3)
-                .foregroundColor(.julWarmBlack)
+                .font(.julHeadline3())
+                .foregroundColor(.julTextPrimary)
 
             Text("Add at least 2 photos")
-                .font(.julCaption)
-                .foregroundColor(.julWarmGray)
+                .font(.julLabelSmall())
+                .foregroundColor(.julTextSecondary)
 
-            LazyVGrid(columns: columns, spacing: JulesSpacing.sm) {
+            LazyVGrid(columns: columns, spacing: Spacing.sm) {
                 ForEach(Array(photos.enumerated()), id: \.element.id) { index, photo in
                     PhotoEditSlot(
                         photo: photo,
@@ -147,9 +159,9 @@ struct PhotosEditSection: View {
                 }
             }
         }
-        .padding(JulesSpacing.md)
-        .background(Color.julCard)
-        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
+        .padding(Spacing.md)
+        .background(Color.julCardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
     }
 }
 
@@ -165,7 +177,7 @@ struct PhotoEditSlot: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(height: 120)
-                    .clipShape(RoundedRectangle(cornerRadius: JulesRadius.small))
+                    .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
             } else if let url = photo.url {
                 AsyncImage(url: URL(string: url)) { image in
                     image
@@ -173,11 +185,11 @@ struct PhotoEditSlot: View {
                         .aspectRatio(contentMode: .fill)
                 } placeholder: {
                     Rectangle()
-                        .fill(Color.julInputBackground)
+                        .fill(Color.julCream)
                         .overlay(ProgressView())
                 }
                 .frame(height: 120)
-                .clipShape(RoundedRectangle(cornerRadius: JulesRadius.small))
+                .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
             }
 
             // Remove button
@@ -192,7 +204,7 @@ struct PhotoEditSlot: View {
             // Primary badge
             if index == 0 {
                 Text("Primary")
-                    .font(.julCaption)
+                    .font(.julLabelSmall())
                     .foregroundColor(.white)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
@@ -211,23 +223,23 @@ struct AddPhotoButton: View {
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: JulesSpacing.xs) {
+            VStack(spacing: Spacing.xs) {
                 Image(systemName: "plus")
                     .font(.system(size: 24))
-                    .foregroundColor(.julWarmGray)
+                    .foregroundColor(.julTextSecondary)
 
                 Text("Add")
-                    .font(.julCaption)
-                    .foregroundColor(.julWarmGray)
+                    .font(.julLabelSmall())
+                    .foregroundColor(.julTextSecondary)
             }
             .frame(maxWidth: .infinity)
             .frame(height: 120)
-            .background(Color.julInputBackground)
-            .clipShape(RoundedRectangle(cornerRadius: JulesRadius.small))
+            .background(Color.julCream)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
             .overlay(
-                RoundedRectangle(cornerRadius: JulesRadius.small)
+                RoundedRectangle(cornerRadius: Radius.sm)
                     .stroke(style: StrokeStyle(lineWidth: 1, dash: [6]))
-                    .foregroundColor(.julWarmGray)
+                    .foregroundColor(.julTextSecondary)
             )
         }
     }
@@ -239,16 +251,16 @@ struct SectionCard<Content: View>: View {
     @ViewBuilder let content: () -> Content
 
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.md) {
+        VStack(alignment: .leading, spacing: Spacing.md) {
             Text(title)
-                .font(.julTitle3)
-                .foregroundColor(.julWarmBlack)
+                .font(.julHeadline3())
+                .foregroundColor(.julTextPrimary)
 
             content()
         }
-        .padding(JulesSpacing.md)
-        .background(Color.julCard)
-        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
+        .padding(Spacing.md)
+        .background(Color.julCardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
     }
 }
 
@@ -258,10 +270,10 @@ struct EditTextField: View {
     @Binding var text: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.xs) {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
             Text(label)
-                .font(.julCaption)
-                .foregroundColor(.julWarmGray)
+                .font(.julLabelSmall())
+                .foregroundColor(.julTextSecondary)
 
             JulesTextField(placeholder: label, text: $text)
         }
@@ -274,24 +286,24 @@ struct EditFieldButton: View {
     let action: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.xs) {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
             Text(label)
-                .font(.julCaption)
-                .foregroundColor(.julWarmGray)
+                .font(.julLabelSmall())
+                .foregroundColor(.julTextSecondary)
 
             Button(action: action) {
                 HStack {
                     Text(value)
                         .font(.julBody)
-                        .foregroundColor(.julWarmBlack)
+                        .foregroundColor(.julTextPrimary)
                     Spacer()
                     Image(systemName: "chevron.right")
                         .font(.system(size: 12))
-                        .foregroundColor(.julWarmGray)
+                        .foregroundColor(.julTextSecondary)
                 }
-                .padding(JulesSpacing.md)
-                .background(Color.julInputBackground)
-                .clipShape(RoundedRectangle(cornerRadius: JulesRadius.input))
+                .padding(Spacing.md)
+                .background(Color.julCream)
+                .clipShape(RoundedRectangle(cornerRadius: Radius.md))
             }
         }
     }
@@ -304,10 +316,10 @@ struct EditPicker<T: Hashable>: View {
     var displayValue: ((T) -> String)? = nil
 
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.xs) {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
             Text(label)
-                .font(.julCaption)
-                .foregroundColor(.julWarmGray)
+                .font(.julLabelSmall())
+                .foregroundColor(.julTextSecondary)
 
             Menu {
                 ForEach(options, id: \.self) { option in
@@ -320,20 +332,20 @@ struct EditPicker<T: Hashable>: View {
                     if let selected = selection {
                         Text(displayString(for: selected))
                             .font(.julBody)
-                            .foregroundColor(.julWarmBlack)
+                            .foregroundColor(.julTextPrimary)
                     } else {
                         Text("Select")
                             .font(.julBody)
-                            .foregroundColor(.julWarmGray)
+                            .foregroundColor(.julTextSecondary)
                     }
                     Spacer()
                     Image(systemName: "chevron.down")
                         .font(.system(size: 12))
-                        .foregroundColor(.julWarmGray)
+                        .foregroundColor(.julTextSecondary)
                 }
-                .padding(JulesSpacing.md)
-                .background(Color.julInputBackground)
-                .clipShape(RoundedRectangle(cornerRadius: JulesRadius.input))
+                .padding(Spacing.md)
+                .background(Color.julCream)
+                .clipShape(RoundedRectangle(cornerRadius: Radius.md))
             }
         }
     }
@@ -357,7 +369,7 @@ struct EditToggle: View {
         HStack {
             Text(label)
                 .font(.julBody)
-                .foregroundColor(.julWarmBlack)
+                .foregroundColor(.julTextPrimary)
 
             Spacer()
 
@@ -365,9 +377,9 @@ struct EditToggle: View {
                 .labelsHidden()
                 .tint(.julTerracotta)
         }
-        .padding(JulesSpacing.md)
-        .background(Color.julInputBackground)
-        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.input))
+        .padding(Spacing.md)
+        .background(Color.julCream)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
     }
 }
 
@@ -417,12 +429,12 @@ struct EditablePhoto: Identifiable {
 class EditProfileViewModel: ObservableObject {
     @Published var photos: [EditablePhoto] = []
     @Published var firstName = ""
-    @Published var birthDate = Date()
-    @Published var gender: Gender? = nil
+    @Published var birthDate: Date = Date()
+    @Published var gender: String? = nil
     @Published var heightInches: Int? = nil
     @Published var occupation = ""
     @Published var hasChildren = false
-    @Published var wantsChildren: WantsChildren? = nil
+    @Published var wantsChildren: String? = nil
     @Published var ethnicity = ""
     @Published var religion = ""
     @Published var bio = ""
@@ -449,22 +461,9 @@ class EditProfileViewModel: ObservableObject {
     }
 
     private func loadProfile() {
-        // Load from AuthService
-        if let profile = AuthService.shared.currentProfile {
-            firstName = profile.firstName
-            birthDate = profile.birthDate
-            gender = profile.gender
-            heightInches = profile.heightInches
-            occupation = profile.occupation ?? ""
-            hasChildren = profile.hasChildren ?? false
-            wantsChildren = profile.wantsChildren
-            ethnicity = profile.ethnicity ?? ""
-            religion = profile.religion ?? ""
-            bio = profile.bio ?? ""
-        }
-
-        // Load photos
-        // TODO: Load from UserService
+        // Load from AuthService - simplified
+        // TODO: Load from UserService when available
+        // For now, fields remain empty and user can fill them in
     }
 
     func handlePhotoSelection(_ item: PhotosPickerItem?) async {
@@ -489,5 +488,7 @@ class EditProfileViewModel: ObservableObject {
 
 // MARK: - Preview
 #Preview {
-    EditProfileView()
+    NavigationStack {
+        EditProfileView()
+    }
 }

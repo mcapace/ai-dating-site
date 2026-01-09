@@ -14,10 +14,10 @@ struct EditPreferencesView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: JulesSpacing.lg) {
+                VStack(spacing: Spacing.lg) {
                     // Gender Preference
                     SectionCard(title: "I'm interested in") {
-                        VStack(spacing: JulesSpacing.sm) {
+                        VStack(spacing: Spacing.sm) {
                             ForEach(Gender.allCases, id: \.self) { gender in
                                 JulesSelectionButton(
                                     title: gender.displayName,
@@ -32,7 +32,7 @@ struct EditPreferencesView: View {
 
                     // Age Range
                     SectionCard(title: "Age range") {
-                        VStack(spacing: JulesSpacing.md) {
+                        VStack(spacing: Spacing.md) {
                             AgeRangeSelector(
                                 minAge: $viewModel.minAge,
                                 maxAge: $viewModel.maxAge
@@ -42,18 +42,18 @@ struct EditPreferencesView: View {
                             HStack {
                                 Text("\(viewModel.minAge)")
                                     .font(.julBody)
-                                    .foregroundColor(.julWarmBlack)
+                                    .foregroundColor(.julTextPrimary)
                                 Spacer()
                                 Text("\(viewModel.maxAge)")
                                     .font(.julBody)
-                                    .foregroundColor(.julWarmBlack)
+                                    .foregroundColor(.julTextPrimary)
                             }
                         }
                     }
 
                     // Height Preference
                     SectionCard(title: "Height preference") {
-                        VStack(spacing: JulesSpacing.md) {
+                        VStack(spacing: Spacing.md) {
                             HeightRangeSelector(
                                 minHeight: $viewModel.minHeight,
                                 maxHeight: $viewModel.maxHeight
@@ -62,18 +62,18 @@ struct EditPreferencesView: View {
                             HStack {
                                 Text(formatHeight(viewModel.minHeight))
                                     .font(.julBody)
-                                    .foregroundColor(.julWarmBlack)
+                                    .foregroundColor(.julTextPrimary)
                                 Spacer()
                                 Text(formatHeight(viewModel.maxHeight))
                                     .font(.julBody)
-                                    .foregroundColor(.julWarmBlack)
+                                    .foregroundColor(.julTextPrimary)
                             }
                         }
                     }
 
                     // Children Preference
                     SectionCard(title: "Children") {
-                        VStack(spacing: JulesSpacing.sm) {
+                        VStack(spacing: Spacing.sm) {
                             JulesSelectionButton(
                                 title: "Has children",
                                 subtitle: "Open to partners with children",
@@ -96,7 +96,7 @@ struct EditPreferencesView: View {
 
                     // Distance
                     SectionCard(title: "Distance") {
-                        VStack(spacing: JulesSpacing.md) {
+                        VStack(spacing: Spacing.md) {
                             Slider(
                                 value: $viewModel.maxDistance,
                                 in: 1...50,
@@ -106,16 +106,16 @@ struct EditPreferencesView: View {
 
                             Text("Within \(Int(viewModel.maxDistance)) miles")
                                 .font(.julBody)
-                                .foregroundColor(.julWarmGray)
+                                .foregroundColor(.julTextSecondary)
                         }
                     }
 
                     // Dealbreakers
                     SectionCard(title: "Dealbreakers") {
-                        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
+                        VStack(alignment: .leading, spacing: Spacing.sm) {
                             Text("These are non-negotiables for you")
-                                .font(.julCaption)
-                                .foregroundColor(.julWarmGray)
+                                .font(.julLabelSmall())
+                                .foregroundColor(.julTextSecondary)
 
                             ForEach(viewModel.availableDealbreakers, id: \.self) { dealbreaker in
                                 DealbreakerToggle(
@@ -128,8 +128,8 @@ struct EditPreferencesView: View {
                         }
                     }
                 }
-                .padding(.horizontal, JulesSpacing.screen)
-                .padding(.vertical, JulesSpacing.md)
+                .padding(.horizontal, Spacing.lg)
+                .padding(.vertical, Spacing.md)
             }
             .background(Color.julCream)
             .navigationTitle("Who I'm Looking For")
@@ -137,7 +137,7 @@ struct EditPreferencesView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") { dismiss() }
-                        .foregroundColor(.julWarmGray)
+                        .foregroundColor(.julTextSecondary)
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -147,7 +147,7 @@ struct EditPreferencesView: View {
                             dismiss()
                         }
                     }
-                    .font(.julButton)
+                    .font(.julButton())
                     .foregroundColor(.julTerracotta)
                 }
             }
@@ -171,7 +171,7 @@ struct AgeRangeSelector: View {
             ZStack(alignment: .leading) {
                 // Track
                 Rectangle()
-                    .fill(Color.julDivider)
+                    .fill(Color.julBorder)
                     .frame(height: 4)
 
                 // Selected range
@@ -229,7 +229,7 @@ struct HeightRangeSelector: View {
             ZStack(alignment: .leading) {
                 // Track
                 Rectangle()
-                    .fill(Color.julDivider)
+                    .fill(Color.julBorder)
                     .frame(height: 4)
 
                 // Selected range
@@ -287,15 +287,15 @@ struct DealbreakerToggle: View {
             HStack {
                 Text(title)
                     .font(.julBody)
-                    .foregroundColor(.julWarmBlack)
+                    .foregroundColor(.julTextPrimary)
 
                 Spacer()
 
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(isSelected ? .julTerracotta : .julWarmGray)
+                    .foregroundColor(isSelected ? .julTerracotta : .julTextSecondary)
             }
-            .padding(JulesSpacing.sm)
+            .padding(Spacing.sm)
         }
     }
 }

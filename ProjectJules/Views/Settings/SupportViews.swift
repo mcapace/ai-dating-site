@@ -14,24 +14,24 @@ struct SafetyTipsView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: JulesSpacing.lg) {
+                VStack(alignment: .leading, spacing: Spacing.lg) {
                     // Header
-                    VStack(alignment: .leading, spacing: JulesSpacing.sm) {
+                    VStack(alignment: .leading, spacing: Spacing.sm) {
                         Image(systemName: "shield.fill")
                             .font(.system(size: 40))
                             .foregroundColor(.julSage)
 
                         Text("Your Safety Matters")
-                            .font(.julTitle1)
-                            .foregroundColor(.julWarmBlack)
+                            .font(.julHeadline1())
+                            .foregroundColor(.julTextPrimary)
 
                         Text("We want you to have great dates. Here are some tips to stay safe.")
-                            .font(.julBody)
-                            .foregroundColor(.julWarmGray)
+                            .font(.julBody())
+                            .foregroundColor(.julTextSecondary)
                     }
 
                     // Tips
-                    VStack(spacing: JulesSpacing.md) {
+                    VStack(spacing: Spacing.md) {
                         SafetyTipCard(
                             number: 1,
                             title: "Meet in Public",
@@ -70,23 +70,23 @@ struct SafetyTipsView: View {
                     }
 
                     // Emergency Resources
-                    VStack(alignment: .leading, spacing: JulesSpacing.sm) {
+                    VStack(alignment: .leading, spacing: Spacing.sm) {
                         Text("Need Help?")
-                            .font(.julTitle3)
-                            .foregroundColor(.julWarmBlack)
+                            .font(.julHeadline3())
+                            .foregroundColor(.julTextPrimary)
 
                         Link(destination: URL(string: "tel:911")!) {
                             HStack {
                                 Image(systemName: "phone.fill")
                                     .foregroundColor(.julMutedRed)
                                 Text("Emergency: 911")
-                                    .font(.julBody)
-                                    .foregroundColor(.julWarmBlack)
+                                    .font(.julBody())
+                                    .foregroundColor(.julTextPrimary)
                                 Spacer()
                             }
-                            .padding(JulesSpacing.md)
-                            .background(Color.julCard)
-                            .clipShape(RoundedRectangle(cornerRadius: JulesRadius.small))
+                            .padding(Spacing.md)
+                            .background(Color.julCardBackground)
+                            .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
                         }
 
                         Link(destination: URL(string: "https://www.rainn.org")!) {
@@ -94,21 +94,21 @@ struct SafetyTipsView: View {
                                 Image(systemName: "link")
                                     .foregroundColor(.julTerracotta)
                                 Text("RAINN Support Hotline")
-                                    .font(.julBody)
-                                    .foregroundColor(.julWarmBlack)
+                                    .font(.julBody())
+                                    .foregroundColor(.julTextPrimary)
                                 Spacer()
                                 Image(systemName: "arrow.up.right")
                                     .font(.system(size: 12))
-                                    .foregroundColor(.julWarmGray)
+                                    .foregroundColor(.julTextSecondary)
                             }
-                            .padding(JulesSpacing.md)
-                            .background(Color.julCard)
-                            .clipShape(RoundedRectangle(cornerRadius: JulesRadius.small))
+                            .padding(Spacing.md)
+                            .background(Color.julCardBackground)
+                            .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
                         }
                     }
                 }
-                .padding(.horizontal, JulesSpacing.screen)
-                .padding(.vertical, JulesSpacing.md)
+                .padding(.horizontal, Spacing.lg)
+                .padding(.vertical, Spacing.md)
             }
             .background(Color.julCream)
             .navigationTitle("Safety Tips")
@@ -129,29 +129,29 @@ struct SafetyTipCard: View {
     let description: String
 
     var body: some View {
-        HStack(alignment: .top, spacing: JulesSpacing.md) {
+        HStack(alignment: .top, spacing: Spacing.md) {
             // Number badge
             Text("\(number)")
-                .font(.julTitle3)
+                .font(.julHeadline3())
                 .foregroundColor(.white)
                 .frame(width: 32, height: 32)
                 .background(Color.julSage)
                 .clipShape(Circle())
 
-            VStack(alignment: .leading, spacing: JulesSpacing.xs) {
+            VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(title)
-                    .font(.julTitle3)
-                    .foregroundColor(.julWarmBlack)
+                    .font(.julHeadline3())
+                    .foregroundColor(.julTextPrimary)
 
                 Text(description)
-                    .font(.julBody)
-                    .foregroundColor(.julWarmGray)
+                    .font(.julBody())
+                    .foregroundColor(.julTextSecondary)
                     .lineSpacing(3)
             }
         }
-        .padding(JulesSpacing.md)
-        .background(Color.julCard)
-        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
+        .padding(Spacing.md)
+        .background(Color.julCardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
     }
 }
 
@@ -166,23 +166,23 @@ struct ContactSupportView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: JulesSpacing.lg) {
+                VStack(alignment: .leading, spacing: Spacing.lg) {
                     // Header
-                    VStack(alignment: .leading, spacing: JulesSpacing.sm) {
+                    VStack(alignment: .leading, spacing: Spacing.sm) {
                         Text("How can we help?")
-                            .font(.julTitle1)
-                            .foregroundColor(.julWarmBlack)
+                            .font(.julHeadline1())
+                            .foregroundColor(.julTextPrimary)
 
                         Text("We typically respond within 24 hours.")
-                            .font(.julBody)
-                            .foregroundColor(.julWarmGray)
+                            .font(.julBody())
+                            .foregroundColor(.julTextSecondary)
                     }
 
                     // Quick Help
-                    VStack(alignment: .leading, spacing: JulesSpacing.sm) {
+                    VStack(alignment: .leading, spacing: Spacing.sm) {
                         Text("Quick Help")
-                            .font(.julTitle3)
-                            .foregroundColor(.julWarmBlack)
+                            .font(.julHeadline3())
+                            .foregroundColor(.julTextPrimary)
 
                         QuickHelpButton(icon: "questionmark.circle", title: "FAQs", subtitle: "Common questions answered")
                         QuickHelpButton(icon: "person.badge.shield.checkmark", title: "Report a User", subtitle: "Safety concerns")
@@ -190,33 +190,38 @@ struct ContactSupportView: View {
                     }
 
                     Divider()
-                        .background(Color.julDivider)
+                        .background(Color.julBorder)
 
                     // Contact Form
-                    VStack(alignment: .leading, spacing: JulesSpacing.md) {
+                    VStack(alignment: .leading, spacing: Spacing.md) {
                         Text("Send us a message")
-                            .font(.julTitle3)
-                            .foregroundColor(.julWarmBlack)
+                            .font(.julHeadline3())
+                            .foregroundColor(.julTextPrimary)
 
-                        VStack(alignment: .leading, spacing: JulesSpacing.xs) {
-                            Text("Subject")
-                                .font(.julCaption)
-                                .foregroundColor(.julWarmGray)
-
-                            JulesTextField(placeholder: "What's this about?", text: $subject)
+                        VStack(alignment: .leading, spacing: Spacing.xs) {
+                            JulesTextField(
+                                title: "Subject",
+                                text: $subject,
+                                placeholder: "What's this about?"
+                            )
                         }
 
-                        VStack(alignment: .leading, spacing: JulesSpacing.xs) {
+                        VStack(alignment: .leading, spacing: Spacing.xs) {
                             Text("Message")
-                                .font(.julCaption)
-                                .foregroundColor(.julWarmGray)
-
-                            JulesTextArea(
-                                placeholder: "Tell us more...",
-                                text: $message,
-                                minHeight: 150,
-                                characterLimit: 1000
-                            )
+                                .font(.julLabelSmall())
+                                .foregroundColor(.julTextSecondary)
+                            
+                            TextEditor(text: $message)
+                                .font(.julBody())
+                                .foregroundColor(.julTextPrimary)
+                                .frame(height: 150)
+                                .padding(Spacing.sm)
+                                .background(Color.julCream)
+                                .cornerRadius(Radius.md)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: Radius.md)
+                                        .stroke(Color.julBorder, lineWidth: 1)
+                                )
                         }
 
                         JulesButton(
@@ -229,8 +234,8 @@ struct ContactSupportView: View {
                         }
                     }
                 }
-                .padding(.horizontal, JulesSpacing.screen)
-                .padding(.vertical, JulesSpacing.md)
+                .padding(.horizontal, Spacing.lg)
+                .padding(.vertical, Spacing.md)
             }
             .background(Color.julCream)
             .navigationTitle("Contact Support")
@@ -238,7 +243,7 @@ struct ContactSupportView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Cancel") { dismiss() }
-                        .foregroundColor(.julWarmGray)
+                        .foregroundColor(.julTextSecondary)
                 }
             }
             .alert("Message Sent", isPresented: $showSuccessAlert) {
@@ -266,7 +271,7 @@ struct QuickHelpButton: View {
 
     var body: some View {
         Button(action: {}) {
-            HStack(spacing: JulesSpacing.md) {
+            HStack(spacing: Spacing.md) {
                 Image(systemName: icon)
                     .font(.system(size: 20))
                     .foregroundColor(.julTerracotta)
@@ -274,23 +279,23 @@ struct QuickHelpButton: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(.julBody)
-                        .foregroundColor(.julWarmBlack)
+                        .font(.julBody())
+                        .foregroundColor(.julTextPrimary)
 
                     Text(subtitle)
-                        .font(.julCaption)
-                        .foregroundColor(.julWarmGray)
+                        .font(.julLabelSmall())
+                        .foregroundColor(.julTextSecondary)
                 }
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12))
-                    .foregroundColor(.julWarmGray)
+                    .foregroundColor(.julTextSecondary)
             }
-            .padding(JulesSpacing.md)
-            .background(Color.julCard)
-            .clipShape(RoundedRectangle(cornerRadius: JulesRadius.small))
+            .padding(Spacing.md)
+            .background(Color.julCardBackground)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
         }
     }
 }
@@ -309,19 +314,19 @@ struct TermsPrivacyView: View {
                     Text("Privacy").tag(1)
                 }
                 .pickerStyle(.segmented)
-                .padding(.horizontal, JulesSpacing.screen)
-                .padding(.vertical, JulesSpacing.md)
+                .padding(.horizontal, Spacing.lg)
+                .padding(.vertical, Spacing.md)
 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: JulesSpacing.lg) {
+                    VStack(alignment: .leading, spacing: Spacing.lg) {
                         if selectedTab == 0 {
                             TermsContent()
                         } else {
                             PrivacyContent()
                         }
                     }
-                    .padding(.horizontal, JulesSpacing.screen)
-                    .padding(.vertical, JulesSpacing.md)
+                    .padding(.horizontal, Spacing.lg)
+                    .padding(.vertical, Spacing.md)
                 }
             }
             .background(Color.julCream)
@@ -339,10 +344,10 @@ struct TermsPrivacyView: View {
 
 struct TermsContent: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.lg) {
+        VStack(alignment: .leading, spacing: Spacing.lg) {
             Text("Last updated: January 2026")
-                .font(.julCaption)
-                .foregroundColor(.julWarmGray)
+                .font(.julLabelSmall())
+                .foregroundColor(.julTextSecondary)
 
             LegalSection(
                 title: "1. Acceptance of Terms",
@@ -379,10 +384,10 @@ struct TermsContent: View {
 
 struct PrivacyContent: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.lg) {
+        VStack(alignment: .leading, spacing: Spacing.lg) {
             Text("Last updated: January 2026")
-                .font(.julCaption)
-                .foregroundColor(.julWarmGray)
+                .font(.julLabelSmall())
+                .foregroundColor(.julTextSecondary)
 
             LegalSection(
                 title: "Information We Collect",
@@ -427,14 +432,14 @@ struct LegalSection: View {
     let content: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.xs) {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
             Text(title)
-                .font(.julTitle3)
-                .foregroundColor(.julWarmBlack)
+                .font(.julHeadline3())
+                .foregroundColor(.julTextPrimary)
 
             Text(content)
-                .font(.julBody)
-                .foregroundColor(.julWarmGray)
+                .font(.julBody())
+                .foregroundColor(.julTextSecondary)
                 .lineSpacing(4)
         }
     }
@@ -442,13 +447,19 @@ struct LegalSection: View {
 
 // MARK: - Previews
 #Preview("Safety Tips") {
-    SafetyTipsView()
+    NavigationStack {
+        SafetyTipsView()
+    }
 }
 
 #Preview("Contact Support") {
-    ContactSupportView()
+    NavigationStack {
+        ContactSupportView()
+    }
 }
 
 #Preview("Terms & Privacy") {
-    TermsPrivacyView()
+    NavigationStack {
+        TermsPrivacyView()
+    }
 }

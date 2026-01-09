@@ -18,7 +18,7 @@ struct EditNeighborhoodsView: View {
                 HStack {
                     Text("\(viewModel.selectedNeighborhoods.count) selected")
                         .font(.julBody)
-                        .foregroundColor(.julWarmGray)
+                        .foregroundColor(.julTextSecondary)
 
                     Spacer()
 
@@ -26,18 +26,18 @@ struct EditNeighborhoodsView: View {
                         Button("Clear all") {
                             viewModel.clearAll()
                         }
-                        .font(.julBodySmall)
+                        .font(.julBody()mall)
                         .foregroundColor(.julTerracotta)
                     }
                 }
-                .padding(.horizontal, JulesSpacing.screen)
-                .padding(.vertical, JulesSpacing.sm)
+                .padding(.horizontal, Spacing.lg)
+                .padding(.vertical, Spacing.sm)
                 .background(Color.julCream)
 
                 Divider()
 
                 ScrollView {
-                    VStack(spacing: JulesSpacing.lg) {
+                    VStack(spacing: Spacing.lg) {
                         // City selector (for future multi-city support)
                         if viewModel.availableCities.count > 1 {
                             CitySelector(
@@ -60,8 +60,8 @@ struct EditNeighborhoodsView: View {
                             text: "Jules will look for matches who live in or frequently visit these neighborhoods."
                         )
                     }
-                    .padding(.horizontal, JulesSpacing.screen)
-                    .padding(.vertical, JulesSpacing.md)
+                    .padding(.horizontal, Spacing.lg)
+                    .padding(.vertical, Spacing.md)
                 }
                 .background(Color.julCream)
             }
@@ -70,7 +70,7 @@ struct EditNeighborhoodsView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") { dismiss() }
-                        .foregroundColor(.julWarmGray)
+                        .foregroundColor(.julTextSecondary)
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -80,7 +80,7 @@ struct EditNeighborhoodsView: View {
                             dismiss()
                         }
                     }
-                    .font(.julButton)
+                    .font(.julButton())
                     .foregroundColor(.julTerracotta)
                     .disabled(viewModel.selectedNeighborhoods.isEmpty)
                 }
@@ -95,10 +95,10 @@ struct CitySelector: View {
     @Binding var selectedCity: City?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
             Text("City")
-                .font(.julCaption)
-                .foregroundColor(.julWarmGray)
+                .font(.julLabelSmall())
+                .foregroundColor(.julTextSecondary)
 
             Menu {
                 ForEach(cities) { city in
@@ -110,15 +110,15 @@ struct CitySelector: View {
                 HStack {
                     Text(selectedCity?.name ?? "Select city")
                         .font(.julBody)
-                        .foregroundColor(selectedCity != nil ? .julWarmBlack : .julWarmGray)
+                        .foregroundColor(selectedCity != nil ? .julTextPrimary : .julTextSecondary)
                     Spacer()
                     Image(systemName: "chevron.down")
                         .font(.system(size: 12))
-                        .foregroundColor(.julWarmGray)
+                        .foregroundColor(.julTextSecondary)
                 }
-                .padding(JulesSpacing.md)
-                .background(Color.julCard)
-                .clipShape(RoundedRectangle(cornerRadius: JulesRadius.input))
+                .padding(Spacing.md)
+                .background(Color.julCardBackground)
+                .clipShape(RoundedRectangle(cornerRadius: Radius.md))
             }
         }
     }
@@ -136,17 +136,17 @@ struct NeighborhoodGroupSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
             // Group Header
             Button(action: { withAnimation { isExpanded.toggle() } }) {
                 HStack {
                     Text(group.name)
-                        .font(.julTitle3)
-                        .foregroundColor(.julWarmBlack)
+                        .font(.julHeadline3())
+                        .foregroundColor(.julTextPrimary)
 
                     if selectedCount > 0 {
                         Text("(\(selectedCount))")
-                            .font(.julCaption)
+                            .font(.julLabelSmall())
                             .foregroundColor(.julTerracotta)
                     }
 
@@ -154,13 +154,13 @@ struct NeighborhoodGroupSection: View {
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                         .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.julWarmGray)
+                        .foregroundColor(.julTextSecondary)
                 }
             }
 
             // Neighborhoods
             if isExpanded {
-                FlowLayout(spacing: JulesSpacing.xs) {
+                FlowLayout(spacing: Spacing.xs) {
                     ForEach(group.neighborhoods) { neighborhood in
                         NeighborhoodChip(
                             neighborhood: neighborhood,
@@ -172,9 +172,9 @@ struct NeighborhoodGroupSection: View {
                 }
             }
         }
-        .padding(JulesSpacing.md)
-        .background(Color.julCard)
-        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
+        .padding(Spacing.md)
+        .background(Color.julCardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
     }
 
     private func toggleSelection(_ id: String) {
@@ -196,10 +196,10 @@ struct NeighborhoodChip: View {
         Button(action: action) {
             Text(neighborhood.name)
                 .font(.julBody)
-                .foregroundColor(isSelected ? .white : .julWarmBlack)
-                .padding(.horizontal, JulesSpacing.md)
-                .padding(.vertical, JulesSpacing.sm)
-                .background(isSelected ? Color.julWarmBlack : Color.julInputBackground)
+                .foregroundColor(isSelected ? .white : .julTextPrimary)
+                .padding(.horizontal, Spacing.md)
+                .padding(.vertical, Spacing.sm)
+                .background(isSelected ? Color.julTextPrimary : Color.julCream)
                 .clipShape(Capsule())
         }
     }
@@ -211,20 +211,20 @@ struct InfoCard: View {
     let text: String
 
     var body: some View {
-        HStack(alignment: .top, spacing: JulesSpacing.sm) {
+        HStack(alignment: .top, spacing: Spacing.sm) {
             Image(systemName: icon)
                 .font(.system(size: 16))
                 .foregroundColor(.julTerracotta)
 
             Text(text)
-                .font(.julCaption)
-                .foregroundColor(.julWarmGray)
+                .font(.julLabelSmall())
+                .foregroundColor(.julTextSecondary)
                 .lineSpacing(3)
         }
-        .padding(JulesSpacing.md)
+        .padding(Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.julTerracotta.opacity(0.08))
-        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.small))
+        .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
     }
 }
 

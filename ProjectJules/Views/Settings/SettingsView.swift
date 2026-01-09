@@ -45,28 +45,7 @@ struct SettingsView: View {
     }
 }
 
-struct EditProfileView: View {
-    @State private var firstName: String = ""
-    @State private var lastName: String = ""
-    @State private var bio: String = ""
-    
-    var body: some View {
-        Form {
-            Section("Basic Info") {
-                JulesTextField(title: "First Name", text: $firstName)
-                JulesTextField(title: "Last Name", text: $lastName)
-                JulesTextField(title: "Bio", text: $bio)
-            }
-            
-            Section {
-                JulesButton(title: "Save Changes", style: .primary) {
-                    // Save
-                }
-            }
-        }
-        .navigationTitle("Edit Profile")
-    }
-}
+// EditProfileView is defined in EditProfileView.swift
 
 struct PreferencesSettingsView: View {
     var body: some View {
@@ -82,63 +61,8 @@ struct NeighborhoodsSettingsView: View {
     }
 }
 
-struct SubscriptionView: View {
-    var body: some View {
-        VStack(spacing: Spacing.lg) {
-            Text("Subscription")
-                .font(.julHeadline2())
-                .foregroundColor(.julTextPrimary)
-            
-            Text("Upgrade to Premium for more features")
-                .font(.julBody())
-                .foregroundColor(.julTextSecondary)
-            
-            JulesButton(title: "Upgrade to Premium", style: .primary) {
-                // Handle upgrade
-            }
-        }
-        .padding(Spacing.lg)
-        .navigationTitle("Subscription")
-    }
-}
-
-struct SafetyTipsView: View {
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Spacing.md) {
-                Text("Safety Tips")
-                    .font(.julHeadline2())
-                    .foregroundColor(.julTextPrimary)
-                
-                Text("Content for safety tips...")
-                    .font(.julBody())
-                    .foregroundColor(.julTextSecondary)
-            }
-            .padding(Spacing.lg)
-        }
-        .navigationTitle("Safety Tips")
-    }
-}
-
-struct ContactSupportView: View {
-    @State private var message: String = ""
-    
-    var body: some View {
-        Form {
-            Section("Contact Us") {
-                TextEditor(text: $message)
-                    .frame(height: 200)
-            }
-            
-            Section {
-                JulesButton(title: "Send", style: .primary) {
-                    // Send message
-                }
-            }
-        }
-        .navigationTitle("Contact Support")
-    }
-}
+// SubscriptionView is defined in SubscriptionView.swift
+// SafetyTipsView and ContactSupportView are defined in SupportViews.swift
 
 struct TermsView: View {
     var body: some View {

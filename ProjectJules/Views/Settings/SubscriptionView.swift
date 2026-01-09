@@ -14,7 +14,7 @@ struct SubscriptionView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: JulesSpacing.lg) {
+                VStack(spacing: Spacing.lg) {
                     // Current Plan
                     CurrentPlanCard(
                         tier: viewModel.currentTier,
@@ -41,8 +41,8 @@ struct SubscriptionView: View {
                         )
                     }
                 }
-                .padding(.horizontal, JulesSpacing.screen)
-                .padding(.vertical, JulesSpacing.md)
+                .padding(.horizontal, Spacing.lg)
+                .padding(.vertical, Spacing.md)
             }
             .background(Color.julCream)
             .navigationTitle("My Subscription")
@@ -52,7 +52,7 @@ struct SubscriptionView: View {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.julWarmBlack)
+                            .foregroundColor(.julTextPrimary)
                     }
                 }
             }
@@ -84,40 +84,40 @@ struct CurrentPlanCard: View {
     let renewalDate: Date?
 
     var body: some View {
-        VStack(spacing: JulesSpacing.md) {
+        VStack(spacing: Spacing.md) {
             // Plan Icon
             ZStack {
                 Circle()
-                    .fill(tier == .free ? Color.julInputBackground : LinearGradient.julPremiumGradient)
+                    .fill(tier == .free ? Color.julCream : LinearGradient.julPremiumGradient)
                     .frame(width: 64, height: 64)
 
                 Image(systemName: tier == .free ? "person.fill" : "crown.fill")
                     .font(.system(size: 28))
-                    .foregroundColor(tier == .free ? .julWarmGray : .white)
+                    .foregroundColor(tier == .free ? .julTextSecondary : .white)
             }
 
             // Plan Name
             Text(tier.displayName)
-                .font(.julTitle2)
-                .foregroundColor(.julWarmBlack)
+                .font(.julHeadline2())
+                .foregroundColor(.julTextPrimary)
 
             // Status
             if tier == .free {
                 Text("Upgrade to unlock premium features")
                     .font(.julBody)
-                    .foregroundColor(.julWarmGray)
+                    .foregroundColor(.julTextSecondary)
                     .multilineTextAlignment(.center)
             } else if let renewalDate = renewalDate {
                 let formatter = DateFormatter()
                 Text("Renews \(formatter.string(from: renewalDate))")
                     .font(.julBody)
-                    .foregroundColor(.julWarmGray)
+                    .foregroundColor(.julTextSecondary)
             }
         }
-        .padding(JulesSpacing.lg)
+        .padding(Spacing.lg)
         .frame(maxWidth: .infinity)
-        .background(Color.julCard)
-        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
+        .background(Color.julCardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
     }
 }
 
@@ -126,10 +126,10 @@ struct UpgradeSection: View {
     let onSelectPlan: (SubscriptionPlan) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.md) {
+        VStack(alignment: .leading, spacing: Spacing.md) {
             Text("Choose Your Plan")
-                .font(.julTitle3)
-                .foregroundColor(.julWarmBlack)
+                .font(.julHeadline3())
+                .foregroundColor(.julTextPrimary)
 
             // Monthly Plan
             PlanCard(
@@ -192,11 +192,11 @@ struct PlanCard: View {
                 // Popular badge
                 if isPopular {
                     Text("BEST VALUE")
-                        .font(.julCaption)
+                        .font(.julLabelSmall())
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
-                        .padding(.horizontal, JulesSpacing.md)
-                        .padding(.vertical, JulesSpacing.xs)
+                        .padding(.horizontal, Spacing.md)
+                        .padding(.vertical, Spacing.xs)
                         .frame(maxWidth: .infinity)
                         .background(Color.julTerracotta)
                 }
@@ -204,13 +204,13 @@ struct PlanCard: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(plan == .monthly ? "Monthly" : "Annual")
-                            .font(.julTitle3)
-                            .foregroundColor(.julWarmBlack)
+                            .font(.julHeadline3())
+                            .foregroundColor(.julTextPrimary)
 
                         if let equivalent = plan.monthlyEquivalent {
                             Text(equivalent)
-                                .font(.julCaption)
-                                .foregroundColor(.julWarmGray)
+                                .font(.julLabelSmall())
+                                .foregroundColor(.julTextSecondary)
                         }
                     }
 
@@ -219,29 +219,29 @@ struct PlanCard: View {
                     VStack(alignment: .trailing, spacing: 4) {
                         HStack(alignment: .firstTextBaseline, spacing: 2) {
                             Text(plan.price)
-                                .font(.julTitle2)
-                                .foregroundColor(.julWarmBlack)
+                                .font(.julHeadline2())
+                                .foregroundColor(.julTextPrimary)
 
                             Text(plan.period)
-                                .font(.julCaption)
-                                .foregroundColor(.julWarmGray)
+                                .font(.julLabelSmall())
+                                .foregroundColor(.julTextSecondary)
                         }
 
                         if let savings = plan.savings {
                             Text(savings)
-                                .font(.julCaption)
+                                .font(.julLabelSmall())
                                 .foregroundColor(.julSage)
                                 .fontWeight(.medium)
                         }
                     }
                 }
-                .padding(JulesSpacing.md)
+                .padding(Spacing.md)
             }
-            .background(Color.julCard)
-            .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
+            .background(Color.julCardBackground)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md))
             .overlay(
-                RoundedRectangle(cornerRadius: JulesRadius.medium)
-                    .stroke(isPopular ? Color.julTerracotta : Color.julDivider, lineWidth: isPopular ? 2 : 1)
+                RoundedRectangle(cornerRadius: Radius.md)
+                    .stroke(isPopular ? Color.julTerracotta : Color.julBorder, lineWidth: isPopular ? 2 : 1)
             )
         }
     }
@@ -250,21 +250,21 @@ struct PlanCard: View {
 // MARK: - Benefits Section
 struct BenefitsSection: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: JulesSpacing.md) {
+        VStack(alignment: .leading, spacing: Spacing.md) {
             Text("Premium Benefits")
-                .font(.julTitle3)
-                .foregroundColor(.julWarmBlack)
+                .font(.julHeadline3())
+                .foregroundColor(.julTextPrimary)
 
-            VStack(spacing: JulesSpacing.sm) {
+            VStack(spacing: Spacing.sm) {
                 BenefitRow(icon: "bolt.fill", title: "Priority Matching", description: "Get pitched to matches first")
                 BenefitRow(icon: "envelope.fill", title: "Unlimited Notes", description: "Send personalized notes to matches")
                 BenefitRow(icon: "star.fill", title: "Standout Days", description: "Get featured once a week")
                 BenefitRow(icon: "infinity", title: "Unlimited Dates", description: "No limit on monthly intros")
                 BenefitRow(icon: "eye.fill", title: "See Who Likes You", description: "Know before Jules tells you")
             }
-            .padding(JulesSpacing.md)
-            .background(Color.julCard)
-            .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
+            .padding(Spacing.md)
+            .background(Color.julCardBackground)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md))
         }
     }
 }
@@ -275,7 +275,7 @@ struct BenefitRow: View {
     let description: String
 
     var body: some View {
-        HStack(spacing: JulesSpacing.md) {
+        HStack(spacing: Spacing.md) {
             Image(systemName: icon)
                 .font(.system(size: 18))
                 .foregroundColor(.julTerracotta)
@@ -284,11 +284,11 @@ struct BenefitRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.julBody)
-                    .foregroundColor(.julWarmBlack)
+                    .foregroundColor(.julTextPrimary)
 
                 Text(description)
-                    .font(.julCaption)
-                    .foregroundColor(.julWarmGray)
+                    .font(.julLabelSmall())
+                    .foregroundColor(.julTextSecondary)
             }
 
             Spacer()
@@ -301,7 +301,7 @@ struct ManageSubscriptionSection: View {
     let onCancel: () -> Void
 
     var body: some View {
-        VStack(spacing: JulesSpacing.md) {
+        VStack(spacing: Spacing.md) {
             Button(action: {
                 // Open App Store subscription management
                 if let url = URL(string: "itms-apps://apps.apple.com/account/subscriptions") {
@@ -311,15 +311,15 @@ struct ManageSubscriptionSection: View {
                 HStack {
                     Text("Manage in App Store")
                         .font(.julBody)
-                        .foregroundColor(.julWarmBlack)
+                        .foregroundColor(.julTextPrimary)
                     Spacer()
                     Image(systemName: "arrow.up.right")
                         .font(.system(size: 12))
-                        .foregroundColor(.julWarmGray)
+                        .foregroundColor(.julTextSecondary)
                 }
-                .padding(JulesSpacing.md)
-                .background(Color.julCard)
-                .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
+                .padding(Spacing.md)
+                .background(Color.julCardBackground)
+                .clipShape(RoundedRectangle(cornerRadius: Radius.md))
             }
 
             Button(action: onCancel) {
@@ -341,14 +341,14 @@ struct PaymentSheet: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: JulesSpacing.xl) {
+            VStack(spacing: Spacing.xl) {
                 Spacer()
 
                 // Plan Summary
-                VStack(spacing: JulesSpacing.md) {
+                VStack(spacing: Spacing.md) {
                     Text("Jules Premium")
-                        .font(.julTitle1)
-                        .foregroundColor(.julWarmBlack)
+                        .font(.julHeadline1())
+                        .foregroundColor(.julTextPrimary)
 
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
                         Text(plan.price)
@@ -357,15 +357,15 @@ struct PaymentSheet: View {
 
                         Text(plan.period)
                             .font(.julBody)
-                            .foregroundColor(.julWarmGray)
+                            .foregroundColor(.julTextSecondary)
                     }
 
                     if let savings = plan.savings {
                         Text(savings)
                             .font(.julBody)
                             .foregroundColor(.julSage)
-                            .padding(.horizontal, JulesSpacing.md)
-                            .padding(.vertical, JulesSpacing.xs)
+                            .padding(.horizontal, Spacing.md)
+                            .padding(.vertical, Spacing.xs)
                             .background(Color.julSage.opacity(0.15))
                             .clipShape(Capsule())
                     }
@@ -384,20 +384,20 @@ struct PaymentSheet: View {
 
                 // Terms
                 Text("Payment will be charged to your Apple ID account. Subscription automatically renews unless cancelled at least 24 hours before the end of the current period.")
-                    .font(.julCaption)
-                    .foregroundColor(.julWarmGray)
+                    .font(.julLabelSmall())
+                    .foregroundColor(.julTextSecondary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, JulesSpacing.lg)
+                    .padding(.horizontal, Spacing.lg)
             }
-            .padding(.horizontal, JulesSpacing.screen)
-            .padding(.bottom, JulesSpacing.xl)
+            .padding(.horizontal, Spacing.lg)
+            .padding(.bottom, Spacing.xl)
             .background(Color.julCream)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { dismiss() }) {
                         Image(systemName: "xmark")
                             .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.julWarmGray)
+                            .foregroundColor(.julTextSecondary)
                     }
                 }
             }
@@ -443,5 +443,7 @@ class SubscriptionViewModel: ObservableObject {
 
 // MARK: - Preview
 #Preview {
-    SubscriptionView()
+    NavigationStack {
+        SubscriptionView()
+    }
 }
