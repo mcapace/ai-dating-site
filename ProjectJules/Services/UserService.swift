@@ -2,326 +2,198 @@
 //  UserService.swift
 //  ProjectJules
 //
-//  User Profile & Preferences Service
+//  User profile and preferences management
 //
 
 import Foundation
-import UIKit
 import Supabase
 
-// MARK: - User Service
-class UserService {
-    static let shared = UserService()
-
+@MainActor
+class UserService: ObservableObject {
     private let supabase = SupabaseManager.shared
-
-    private init() {}
-
+    
+    // Convenience accessors for database and storage
+    private var database: SupabaseClient.Database {
+        supabase.client.database
+    }
+    private var storage: SupabaseClient.Storage {
+        supabase.client.storage
+    }
+    
     // MARK: - Profile Management
-
-    /// Create user profile during onboarding
-    func createProfile(
-        userId: String,
-        firstName: String,
-        birthDate: Date,
-        gender: Gender
-    ) async throws -> UserProfile {
-        let profile = UserProfile(
-            id: UUID().uuidString,
-            userId: userId,
-            firstName: firstName,
-            birthDate: birthDate,
-            gender: gender,
-            heightInches: nil,
-            hasChildren: nil,
-            occupation: nil,
-            bio: nil,
-            ethnicity: nil,
-            religion: nil,
-            wantsChildren: nil,
-            createdAt: Date(),
-            updatedAt: Date()
-        )
-
-        try await supabase
-            .from(.profiles)
+    
+    func createProfile(userId: UUID, profile: UserProfile) async throws -> UserProfile {
+        let response: UserProfile = try await database
+            .from("user_profiles")
             .insert(profile)
-            .execute()
-
-        return profile
-    }
-
-    /// Update user profile
-    func updateProfile(_ profile: UserProfile) async throws {
-        var updatedProfile = profile
-        updatedProfile.updatedAt = Date()
-
-        try await supabase
-            .from(.profiles)
-            .update(updatedProfile)
-            .eq("id", value: profile.id)
-            .execute()
-    }
-
-    /// Get user profile
-    func getProfile(userId: String) async throws -> UserProfile {
-        let profile: UserProfile = try await supabase
-            .from(.profiles)
             .select()
-            .eq("user_id", value: userId)
             .single()
             .execute()
             .value
-
-        return profile
+        
+        return response
     }
-
-    // MARK: - Photos Management
-
-    /// Upload photo and create record
-    func uploadPhoto(userId: String, image: UIImage, position: Int) async throws -> UserPhoto {
-        // Compress image
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-            throw SupabaseError.invalidData
-        }
-
-        // Generate unique filename
-        let filename = "\(userId)/\(UUID().uuidString).jpg"
-
+    
+    func updateProfile(userId: UUID, profile: UserProfile) async throws -> UserProfile {
+        let response: UserProfile = try await database
+            .from("user_profiles")
+            .update(profile)
+            .eq("user_id", value: userId.uuidString)
+            .select()
+            .single()
+            .execute()
+            .value
+        
+        return response
+    }
+    
+    func getProfile(userId: UUID) async throws -> UserProfile? {
+        let response: [UserProfile] = try await supabase.database
+            .from("user_profiles")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .single()
+            .execute()
+            .value
+        
+        return response.first
+    }
+    
+    // MARK: - Preferences
+    
+    func updatePreferences(userId: UUID, preferences: UserPreferences) async throws -> UserPreferences {
+        let response: UserPreferences = try await supabase.database
+            .from("user_preferences")
+            .upsert(preferences)
+            .eq("user_id", value: userId.uuidString)
+            .select()
+            .single()
+            .execute()
+            .value
+        
+        return response
+    }
+    
+    func getPreferences(userId: UUID) async throws -> UserPreferences? {
+        let response: [UserPreferences] = try await supabase.database
+            .from("user_preferences")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .single()
+            .execute()
+            .value
+        
+        return response.first
+    }
+    
+    // MARK: - Photos
+    
+    func uploadPhoto(userId: UUID, imageData: Data, fileName: String) async throws -> UserPhoto {
         // Upload to storage
-        try await supabase.storage(.avatars).upload(
-            path: filename,
-            file: imageData,
-            options: FileOptions(contentType: "image/jpeg")
-        )
-
+        let filePath = "\(userId.uuidString)/\(fileName)"
+        try await storage
+            .from("avatars")
+            .upload(path: filePath, file: imageData)
+        
         // Get public URL
-        let publicURL = try supabase.storage(.avatars).getPublicURL(path: filename)
-
+        let url = try storage
+            .from("avatars")
+            .getPublicURL(path: filePath)
+        
         // Create photo record
         let photo = UserPhoto(
-            id: UUID().uuidString,
+            id: UUID(),
             userId: userId,
-            url: publicURL.absoluteString,
-            position: position,
-            isPrimary: position == 0,
+            url: url.absoluteString,
+            storagePath: filePath,
+            displayOrder: 0,
+            isPrimary: false,
             createdAt: Date()
         )
-
-        try await supabase
-            .from(.photos)
+        
+        let response: UserPhoto = try await supabase.database
+            .from("user_photos")
             .insert(photo)
-            .execute()
-
-        return photo
-    }
-
-    /// Get user photos
-    func getPhotos(userId: String) async throws -> [UserPhoto] {
-        let photos: [UserPhoto] = try await supabase
-            .from(.photos)
             .select()
-            .eq("user_id", value: userId)
-            .order("position")
+            .single()
             .execute()
             .value
-
-        return photos
+        
+        return response
     }
-
-    /// Delete photo
-    func deletePhoto(_ photo: UserPhoto) async throws {
+    
+    func getPhotos(userId: UUID) async throws -> [UserPhoto] {
+        let response: [UserPhoto] = try await supabase.database
+            .from("user_photos")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .order("display_order")
+            .execute()
+            .value
+        
+        return response
+    }
+    
+    func deletePhoto(photoId: UUID) async throws {
+        // Get photo to delete from storage
+        let photo: UserPhoto = try await supabase.database
+            .from("user_photos")
+            .select()
+            .eq("id", value: photoId.uuidString)
+            .single()
+            .execute()
+            .value
+        
         // Delete from storage
-        let filename = extractFilename(from: photo.url)
-        try await supabase.storage(.avatars).remove(paths: [filename])
-
-        // Delete record
-        try await supabase
-            .from(.photos)
+        try await storage
+            .from("avatars")
+            .remove(paths: [photo.storagePath])
+        
+        // Delete from database
+        try await supabase.database
+            .from("user_photos")
             .delete()
-            .eq("id", value: photo.id)
+            .eq("id", value: photoId.uuidString)
             .execute()
     }
-
-    /// Reorder photos
-    func reorderPhotos(_ photos: [UserPhoto]) async throws {
-        for (index, photo) in photos.enumerated() {
-            var updatedPhoto = photo
-            updatedPhoto.position = index
-            updatedPhoto.isPrimary = index == 0
-
-            try await supabase
-                .from(.photos)
-                .update(updatedPhoto)
-                .eq("id", value: photo.id)
-                .execute()
-        }
+    
+    // MARK: - Neighborhoods
+    
+    func getNeighborhoods(city: String) async throws -> [Neighborhood] {
+        let response: [Neighborhood] = try await supabase.database
+            .from("neighborhoods")
+            .select()
+            .eq("city", value: city)
+            .execute()
+            .value
+        
+        return response
     }
-
-    // MARK: - Preferences Management
-
-    /// Create user preferences
-    func createPreferences(
-        userId: String,
-        genderPreference: [Gender],
-        ageMin: Int,
-        ageMax: Int
-    ) async throws -> UserPreferences {
-        let preferences = UserPreferences(
-            id: UUID().uuidString,
+    
+    func addNeighborhood(userId: UUID, neighborhoodId: UUID) async throws {
+        let userNeighborhood = UserNeighborhood(
+            id: UUID(),
             userId: userId,
-            genderPreference: genderPreference,
-            ageMin: ageMin,
-            ageMax: ageMax,
-            heightMinInches: nil,
-            heightMaxInches: nil,
-            childrenPreference: .noPreference,
-            distanceMaxMiles: 25,
-            createdAt: Date(),
-            updatedAt: Date()
+            neighborhoodId: neighborhoodId,
+            createdAt: Date()
         )
-
-        try await supabase
-            .from(.preferences)
-            .insert(preferences)
-            .execute()
-
-        return preferences
-    }
-
-    /// Update preferences
-    func updatePreferences(_ preferences: UserPreferences) async throws {
-        var updated = preferences
-        updated.updatedAt = Date()
-
-        try await supabase
-            .from(.preferences)
-            .update(updated)
-            .eq("id", value: preferences.id)
+        
+        try await supabase.database
+            .from("user_neighborhoods")
+            .insert(userNeighborhood)
             .execute()
     }
-
-    /// Get preferences
-    func getPreferences(userId: String) async throws -> UserPreferences {
-        let preferences: UserPreferences = try await supabase
-            .from(.preferences)
-            .select()
-            .eq("user_id", value: userId)
-            .single()
+    
+    func getUserNeighborhoods(userId: UUID) async throws -> [Neighborhood] {
+        let response: [Neighborhood] = try await supabase.database
+            .from("user_neighborhoods")
+            .select("neighborhoods(*)")
+            .eq("user_id", value: userId.uuidString)
             .execute()
             .value
-
-        return preferences
-    }
-
-    // MARK: - Neighborhoods Management
-
-    /// Set user neighborhoods
-    func setNeighborhoods(userId: String, neighborhoodIds: [String]) async throws {
-        // Delete existing
-        try await supabase
-            .from(.userNeighborhoods)
-            .delete()
-            .eq("user_id", value: userId)
-            .execute()
-
-        // Insert new
-        let neighborhoods = neighborhoodIds.map { neighborhoodId in
-            UserNeighborhood(
-                id: UUID().uuidString,
-                userId: userId,
-                neighborhoodId: neighborhoodId,
-                isWeekday: true,
-                isWeekend: true
-            )
-        }
-
-        if !neighborhoods.isEmpty {
-            try await supabase
-                .from(.userNeighborhoods)
-                .insert(neighborhoods)
-                .execute()
-        }
-    }
-
-    /// Get user neighborhoods
-    func getNeighborhoods(userId: String) async throws -> [UserNeighborhood] {
-        let neighborhoods: [UserNeighborhood] = try await supabase
-            .from(.userNeighborhoods)
-            .select()
-            .eq("user_id", value: userId)
-            .execute()
-            .value
-
-        return neighborhoods
-    }
-
-    // MARK: - Complete Onboarding
-
-    /// Mark onboarding as complete
-    func completeOnboarding(userId: String) async throws {
-        try await supabase
-            .from(.users)
-            .update(["status": UserStatus.active.rawValue, "updated_at": ISO8601DateFormatter().string(from: Date())])
-            .eq("id", value: userId)
-            .execute()
-    }
-
-    // MARK: - Helpers
-
-    private func extractFilename(from url: String) -> String {
-        // Extract path after bucket name
-        guard let urlComponents = URLComponents(string: url),
-              let path = urlComponents.path.split(separator: "/").last else {
-            return url
-        }
-        return String(path)
+        
+        // Parse nested response
+        return response
     }
 }
 
-// MARK: - Neighborhood Service
-class NeighborhoodService {
-    static let shared = NeighborhoodService()
-
-    private let supabase = SupabaseManager.shared
-
-    private init() {}
-
-    /// Get all neighborhoods for a city
-    func getNeighborhoods(cityId: String) async throws -> [Neighborhood] {
-        let neighborhoods: [Neighborhood] = try await supabase
-            .from(.neighborhoods)
-            .select()
-            .eq("city_id", value: cityId)
-            .order("name")
-            .execute()
-            .value
-
-        return neighborhoods
-    }
-
-    /// Get single neighborhood
-    func getNeighborhood(id: String) async throws -> Neighborhood {
-        let neighborhood: Neighborhood = try await supabase
-            .from(.neighborhoods)
-            .select()
-            .eq("id", value: id)
-            .single()
-            .execute()
-            .value
-
-        return neighborhood
-    }
-
-    /// Get all active cities
-    func getCities() async throws -> [City] {
-        let cities: [City] = try await supabase
-            .from(.cities)
-            .select()
-            .eq("is_active", value: true)
-            .execute()
-            .value
-
-        return cities
-    }
-}

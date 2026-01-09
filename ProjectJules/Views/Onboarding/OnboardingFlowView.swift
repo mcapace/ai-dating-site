@@ -2,447 +2,362 @@
 //  OnboardingFlowView.swift
 //  ProjectJules
 //
-//  Main Onboarding Flow Container
+//  Onboarding flow coordinator
 //
 
 import SwiftUI
+import UIKit
 
-// MARK: - Onboarding Flow
 struct OnboardingFlowView: View {
-    @StateObject private var viewModel = OnboardingViewModel()
-    @EnvironmentObject var appState: AppState
-
+    @StateObject private var authService = AuthService()
+    @State private var currentStep: OnboardingStep = .welcome
+    @State private var phoneNumber: String = ""
+    @State private var otpCode: String = ""
+    
+    enum OnboardingStep {
+        case welcome
+        case phoneVerification
+        case otpVerification
+        case basicInfo
+        case preferences
+        case photos
+        case neighborhoods
+        case julesIntro
+    }
+    
     var body: some View {
         ZStack {
-            Color.julCream
+            Color.julBackground
                 .ignoresSafeArea()
-
-            VStack(spacing: 0) {
-                // Progress indicator (except on welcome)
-                if viewModel.currentStep != .welcome {
-                    OnboardingProgress(
-                        currentStep: viewModel.currentStep.rawValue,
-                        totalSteps: OnboardingStep.allCases.count - 1
-                    )
-                    .padding(.top, JulesSpacing.md)
-                }
-
-                // Current step content
-                Group {
-                    switch viewModel.currentStep {
-                    case .welcome:
-                        WelcomeView(onContinue: viewModel.nextStep)
-
-                    case .phone:
-                        PhoneInputView(viewModel: viewModel)
-
-                    case .verification:
-                        VerificationView(viewModel: viewModel)
-
-                    case .basicInfo:
-                        BasicInfoView(viewModel: viewModel)
-
-                    case .photos:
-                        PhotosView(viewModel: viewModel)
-
-                    case .lookingFor:
-                        LookingForView(viewModel: viewModel)
-
-                    case .moreDetails:
-                        MoreDetailsView(viewModel: viewModel)
-
-                    case .neighborhoods:
-                        NeighborhoodsView(viewModel: viewModel)
-
-                    case .meetJules:
-                        MeetJulesView(onContinue: viewModel.nextStep)
-
-                    case .julesChat:
-                        JulesOnboardingChatView(viewModel: viewModel) {
-                            completeOnboarding()
+            
+            switch currentStep {
+            case .welcome:
+                WelcomeView(onContinue: {
+                    currentStep = .phoneVerification
+                })
+            case .phoneVerification:
+                PhoneVerificationView(
+                    phoneNumber: $phoneNumber,
+                    onSendCode: {
+                        Task {
+                            try? await authService.sendOTP(phone: phoneNumber)
+                            currentStep = .otpVerification
                         }
                     }
-                }
-                .transition(.asymmetric(
-                    insertion: .move(edge: .trailing).combined(with: .opacity),
-                    removal: .move(edge: .leading).combined(with: .opacity)
-                ))
-            }
-        }
-        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: viewModel.currentStep)
-        .alert("Error", isPresented: .constant(viewModel.error != nil)) {
-            Button("OK") { viewModel.error = nil }
-        } message: {
-            Text(viewModel.error ?? "")
-        }
-    }
-
-    private func completeOnboarding() {
-        Task {
-            await viewModel.completeOnboarding()
-            await MainActor.run {
-                withAnimation {
-                    appState.currentFlow = .main
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Onboarding Progress
-struct OnboardingProgress: View {
-    let currentStep: Int
-    let totalSteps: Int
-
-    var body: some View {
-        HStack(spacing: 4) {
-            ForEach(1...totalSteps, id: \.self) { step in
-                RoundedRectangle(cornerRadius: 2)
-                    .fill(step <= currentStep ? Color.julTerracotta : Color.julDivider)
-                    .frame(height: 3)
-            }
-        }
-        .padding(.horizontal, JulesSpacing.screen)
-    }
-}
-
-// MARK: - Onboarding Steps
-enum OnboardingStep: Int, CaseIterable {
-    case welcome = 0
-    case phone
-    case verification
-    case basicInfo
-    case photos
-    case lookingFor
-    case moreDetails
-    case neighborhoods
-    case meetJules
-    case julesChat
-}
-
-// MARK: - Onboarding View Model
-@MainActor
-class OnboardingViewModel: ObservableObject {
-    @Published var currentStep: OnboardingStep = .welcome
-    @Published var isLoading = false
-    @Published var error: String?
-
-    // Phone/Auth
-    @Published var phoneNumber = ""
-    @Published var verificationCode = ""
-
-    // Basic Info
-    @Published var firstName = ""
-    @Published var birthDate = Calendar.current.date(byAdding: .year, value: -30, to: Date()) ?? Date()
-    @Published var gender: Gender = .man
-
-    // Photos
-    @Published var photos: [UIImage] = []
-
-    // Looking For
-    @Published var genderPreference: Set<Gender> = []
-    @Published var ageMin: Double = 25
-    @Published var ageMax: Double = 45
-
-    // More Details
-    @Published var heightInches: Int?
-    @Published var hasChildren: Bool?
-    @Published var occupation = ""
-
-    // Neighborhoods
-    @Published var selectedNeighborhoods: Set<String> = []
-    @Published var availableNeighborhoods: [Neighborhood] = []
-
-    // Jules Chat
-    @Published var julesMessages: [ChatMessage] = []
-    @Published var currentJulesQuestion = 0
-    @Published var onboardingAnswers: [String: String] = [:]
-
-    private let authService = AuthService.shared
-    private let userService = UserService.shared
-    private let julesService = JulesService.shared
-    private let neighborhoodService = NeighborhoodService.shared
-
-    // MARK: - Navigation
-
-    func nextStep() {
-        guard let nextStep = OnboardingStep(rawValue: currentStep.rawValue + 1) else { return }
-        currentStep = nextStep
-    }
-
-    func previousStep() {
-        guard let prevStep = OnboardingStep(rawValue: currentStep.rawValue - 1) else { return }
-        currentStep = prevStep
-    }
-
-    // MARK: - Phone Verification
-
-    func sendOTP() async {
-        isLoading = true
-        error = nil
-
-        do {
-            try await authService.sendOTP(phone: phoneNumber)
-            await MainActor.run {
-                nextStep()
-            }
-        } catch {
-            self.error = error.localizedDescription
-        }
-
-        isLoading = false
-    }
-
-    func verifyOTP() async {
-        isLoading = true
-        error = nil
-
-        do {
-            try await authService.verifyOTP(phone: phoneNumber, code: verificationCode)
-            await MainActor.run {
-                nextStep()
-            }
-        } catch {
-            self.error = error.localizedDescription
-        }
-
-        isLoading = false
-    }
-
-    // MARK: - Profile Creation
-
-    func saveBasicInfo() async {
-        guard let userId = authService.currentUser?.id else {
-            error = "Not authenticated"
-            return
-        }
-
-        isLoading = true
-
-        do {
-            _ = try await userService.createProfile(
-                userId: userId,
-                firstName: firstName,
-                birthdate: birthDate,
-                gender: gender
-            )
-            await MainActor.run {
-                nextStep()
-            }
-        } catch {
-            self.error = error.localizedDescription
-        }
-
-        isLoading = false
-    }
-
-    func uploadPhotos() async {
-        guard let userId = authService.currentUser?.id else {
-            error = "Not authenticated"
-            return
-        }
-
-        isLoading = true
-
-        do {
-            for (index, image) in photos.enumerated() {
-                _ = try await userService.uploadPhoto(
-                    userId: userId,
-                    image: image,
-                    position: index + 1
                 )
+            case .otpVerification:
+                OTPVerificationView(
+                    code: $otpCode,
+                    phoneNumber: phoneNumber,
+                    onVerify: {
+                        Task {
+                            try? await authService.verifyOTP(phone: phoneNumber, token: otpCode)
+                            if authService.isAuthenticated {
+                                currentStep = .basicInfo
+                            }
+                        }
+                    }
+                )
+            case .basicInfo:
+                BasicInfoView(onContinue: {
+                    currentStep = .preferences
+                })
+            case .preferences:
+                PreferencesView(onContinue: {
+                    currentStep = .photos
+                })
+            case .photos:
+                PhotosView(onContinue: {
+                    currentStep = .neighborhoods
+                })
+            case .neighborhoods:
+                NeighborhoodsView(onContinue: {
+                    currentStep = .julesIntro
+                })
+            case .julesIntro:
+                JulesIntroView(onComplete: {
+                    // Onboarding complete
+                })
             }
-            await MainActor.run {
-                nextStep()
-            }
-        } catch {
-            self.error = error.localizedDescription
         }
-
-        isLoading = false
-    }
-
-    func savePreferences() async {
-        guard let userId = authService.currentUser?.id else {
-            error = "Not authenticated"
-            return
-        }
-
-        isLoading = true
-
-        do {
-            _ = try await userService.createPreferences(
-                userId: userId,
-                genderPreference: Array(genderPreference),
-                ageMin: Int(ageMin),
-                ageMax: Int(ageMax)
-            )
-            await MainActor.run {
-                nextStep()
-            }
-        } catch {
-            self.error = error.localizedDescription
-        }
-
-        isLoading = false
-    }
-
-    func saveMoreDetails() async {
-        guard let userId = authService.currentUser?.id else {
-            error = "Not authenticated"
-            return
-        }
-
-        isLoading = true
-
-        do {
-            var profile = try await userService.getProfile(userId: userId)
-            profile.heightInches = heightInches
-            profile.hasChildren = hasChildren
-            profile.occupation = occupation.isEmpty ? nil : occupation
-
-            try await userService.updateProfile(profile)
-            await MainActor.run {
-                nextStep()
-            }
-        } catch {
-            self.error = error.localizedDescription
-        }
-
-        isLoading = false
-    }
-
-    // MARK: - Neighborhoods
-
-    func loadNeighborhoods() async {
-        do {
-            let neighborhoods = try await neighborhoodService.getNeighborhoods(cityCode: "nyc")
-            await MainActor.run {
-                availableNeighborhoods = neighborhoods
-            }
-        } catch {
-            self.error = error.localizedDescription
-        }
-    }
-
-    func saveNeighborhoods() async {
-        guard let userId = authService.currentUser?.id else {
-            error = "Not authenticated"
-            return
-        }
-
-        isLoading = true
-
-        do {
-            try await userService.setNeighborhoods(
-                userId: userId,
-                neighborhoodIds: Array(selectedNeighborhoods)
-            )
-            await MainActor.run {
-                nextStep()
-            }
-        } catch {
-            self.error = error.localizedDescription
-        }
-
-        isLoading = false
-    }
-
-    // MARK: - Jules Onboarding Chat
-
-    func startJulesChat() async {
-        guard let userId = authService.currentUser?.id else { return }
-
-        do {
-            let conversation = try await julesService.getOrCreateConversation(userId: userId)
-
-            // Get first question
-            let message = try await julesService.getOnboardingQuestion(
-                conversationId: conversation.id,
-                userId: userId,
-                questionIndex: 0,
-                previousAnswers: [:]
-            )
-
-            await MainActor.run {
-                julesMessages.append(ChatMessage(
-                    id: message.id,
-                    content: message.content,
-                    isFromJules: true,
-                    timestamp: message.createdAt
-                ))
-            }
-        } catch {
-            self.error = error.localizedDescription
-        }
-    }
-
-    func sendJulesAnswer(_ answer: String) async {
-        guard let userId = authService.currentUser?.id else { return }
-
-        // Add user message
-        let userMessage = ChatMessage(
-            id: UUID().uuidString,
-            content: answer,
-            isFromJules: false,
-            timestamp: Date()
-        )
-
-        await MainActor.run {
-            julesMessages.append(userMessage)
-            onboardingAnswers["question_\(currentJulesQuestion)"] = answer
-            currentJulesQuestion += 1
-        }
-
-        // Check if onboarding is complete (7 questions)
-        if currentJulesQuestion >= 7 {
-            return // Signal completion
-        }
-
-        do {
-            let conversation = try await julesService.getOrCreateConversation(userId: userId)
-
-            let message = try await julesService.getOnboardingQuestion(
-                conversationId: conversation.id,
-                userId: userId,
-                questionIndex: currentJulesQuestion,
-                previousAnswers: onboardingAnswers
-            )
-
-            await MainActor.run {
-                julesMessages.append(ChatMessage(
-                    id: message.id,
-                    content: message.content,
-                    isFromJules: true,
-                    timestamp: message.createdAt
-                ))
-            }
-        } catch {
-            self.error = error.localizedDescription
-        }
-    }
-
-    // MARK: - Complete Onboarding
-
-    func completeOnboarding() async {
-        guard let userId = authService.currentUser?.id else { return }
-
-        isLoading = true
-
-        do {
-            try await userService.completeOnboarding(userId: userId)
-            await authService.checkSession() // Refresh user state
-        } catch {
-            self.error = error.localizedDescription
-        }
-
-        isLoading = false
     }
 }
 
-// MARK: - Preview
-#Preview {
-    OnboardingFlowView()
-        .environmentObject(AppState())
-        .environmentObject(AuthService.shared)
+struct WelcomeView: View {
+    let onContinue: () -> Void
+    
+    var body: some View {
+        VStack(spacing: Spacing.xl) {
+            Spacer()
+            
+            Text("Welcome to Jules")
+                .font(.julHeadline1())
+                .foregroundColor(.julTextPrimary)
+                .multilineTextAlignment(.center)
+            
+            Text("Your AI-powered dating assistant")
+                .font(.julBodyLarge())
+                .foregroundColor(.julTextSecondary)
+                .multilineTextAlignment(.center)
+            
+            Spacer()
+            
+            JulesButton(title: "Get Started", style: .primary) {
+                onContinue()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.bottom, Spacing.xl)
+        }
+    }
 }
+
+struct PhoneVerificationView: View {
+    @Binding var phoneNumber: String
+    let onSendCode: () -> Void
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: Spacing.xl) {
+                Text("Enter Your Phone Number")
+                    .font(.julHeadline2())
+                    .foregroundColor(.julTextPrimary)
+                    .padding(.top, Spacing.xxl)
+                
+                PhoneInputView(phoneNumber: $phoneNumber, onSendCode: onSendCode)
+                    .padding(.horizontal, Spacing.lg)
+            }
+        }
+    }
+}
+
+struct OTPVerificationView: View {
+    @Binding var code: String
+    let phoneNumber: String
+    let onVerify: () -> Void
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: Spacing.xl) {
+                Text("Enter Verification Code")
+                    .font(.julHeadline2())
+                    .foregroundColor(.julTextPrimary)
+                    .padding(.top, Spacing.xxl)
+                
+                Text("We sent a code to \(phoneNumber)")
+                    .font(.julBody())
+                    .foregroundColor(.julTextSecondary)
+                
+                OTPInputView(code: $code)
+                    .padding(.horizontal, Spacing.lg)
+                
+                JulesButton(title: "Verify", style: .primary) {
+                    onVerify()
+                }
+                .padding(.horizontal, Spacing.lg)
+            }
+        }
+    }
+}
+
+struct BasicInfoView: View {
+    @State private var firstName: String = ""
+    @State private var lastName: String = ""
+    @State private var dateOfBirth: Date = Calendar.current.date(byAdding: .year, value: -25, to: Date()) ?? Date()
+    @State private var bio: String = ""
+    
+    let onContinue: () -> Void
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: Spacing.lg) {
+                Text("Tell Us About Yourself")
+                    .font(.julHeadline2())
+                    .foregroundColor(.julTextPrimary)
+                    .padding(.top, Spacing.xl)
+                
+                JulesTextField(title: "First Name", text: $firstName, placeholder: "Enter your first name")
+                JulesTextField(title: "Last Name", text: $lastName, placeholder: "Enter your last name")
+                
+                DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
+                    .font(.julBody())
+                    .padding(Spacing.md)
+                    .background(Color.julCream)
+                    .cornerRadius(Radius.md)
+                
+                JulesTextField(title: "Bio", text: $bio, placeholder: "Tell us about yourself")
+                
+                JulesButton(title: "Continue", style: .primary) {
+                    onContinue()
+                }
+            }
+            .padding(.horizontal, Spacing.lg)
+        }
+    }
+}
+
+struct PreferencesView: View {
+    @State private var ageMin: Int = 18
+    @State private var ageMax: Int = 99
+    @State private var selectedInterests: Set<String> = []
+    
+    let interests = ["Coffee", "Art", "Travel", "Music", "Food", "Sports", "Reading", "Movies"]
+    let onContinue: () -> Void
+    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: Spacing.lg) {
+                Text("Your Preferences")
+                    .font(.julHeadline2())
+                    .foregroundColor(.julTextPrimary)
+                    .padding(.top, Spacing.xl)
+                
+                Text("Age Range")
+                    .font(.julLabel())
+                    .foregroundColor(.julTextPrimary)
+                
+                HStack {
+                    Text("\(ageMin)")
+                    Slider(value: Binding(
+                        get: { Double(ageMin) },
+                        set: { ageMin = Int($0) }
+                    ), in: 18...99)
+                    Text("\(ageMax)")
+                }
+                
+                Text("Interests")
+                    .font(.julLabel())
+                    .foregroundColor(.julTextPrimary)
+                
+                FlowLayout(spacing: Spacing.sm) {
+                    ForEach(interests, id: \.self) { interest in
+                        TagView(text: interest, isSelected: selectedInterests.contains(interest))
+                            .onTapGesture {
+                                if selectedInterests.contains(interest) {
+                                    selectedInterests.remove(interest)
+                                } else {
+                                    selectedInterests.insert(interest)
+                                }
+                            }
+                    }
+                }
+                
+                JulesButton(title: "Continue", style: .primary) {
+                    onContinue()
+                }
+            }
+            .padding(.horizontal, Spacing.lg)
+        }
+    }
+}
+
+struct PhotosView: View {
+    @State private var photos: [UIImage] = []
+    let onContinue: () -> Void
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: Spacing.lg) {
+                Text("Add Photos")
+                    .font(.julHeadline2())
+                    .foregroundColor(.julTextPrimary)
+                    .padding(.top, Spacing.xl)
+                
+                Text("Add at least one photo to get started")
+                    .font(.julBodySmall())
+                    .foregroundColor(.julTextSecondary)
+                
+                // Photo grid placeholder
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: Spacing.md) {
+                    ForEach(0..<6) { index in
+                        RoundedRectangle(cornerRadius: Radius.md)
+                            .fill(Color.julCream)
+                            .aspectRatio(1, contentMode: .fit)
+                            .overlay(
+                                Image(systemName: "plus")
+                                    .foregroundColor(.julTextSecondary)
+                            )
+                    }
+                }
+                .padding(.horizontal, Spacing.lg)
+                
+                JulesButton(title: "Continue", style: .primary) {
+                    onContinue()
+                }
+                .padding(.horizontal, Spacing.lg)
+            }
+        }
+    }
+}
+
+struct NeighborhoodsView: View {
+    @State private var selectedNeighborhoods: Set<UUID> = []
+    let onContinue: () -> Void
+    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: Spacing.lg) {
+                Text("Select Neighborhoods")
+                    .font(.julHeadline2())
+                    .foregroundColor(.julTextPrimary)
+                    .padding(.top, Spacing.xl)
+                
+                Text("Where do you want to meet people?")
+                    .font(.julBodySmall())
+                    .foregroundColor(.julTextSecondary)
+                
+                // Neighborhood list placeholder
+                ForEach(["SoHo", "West Village", "East Village", "Williamsburg"], id: \.self) { neighborhood in
+                    HStack {
+                        Text(neighborhood)
+                            .font(.julBody())
+                            .foregroundColor(.julTextPrimary)
+                        Spacer()
+                        Image(systemName: selectedNeighborhoods.contains(UUID()) ? "checkmark.circle.fill" : "circle")
+                            .foregroundColor(.julTerracotta)
+                    }
+                    .padding(Spacing.md)
+                    .background(Color.julCardBackground)
+                    .cornerRadius(Radius.md)
+                    .onTapGesture {
+                        // Toggle selection
+                    }
+                }
+                
+                JulesButton(title: "Continue", style: .primary) {
+                    onContinue()
+                }
+                .padding(.horizontal, Spacing.lg)
+            }
+            .padding(.horizontal, Spacing.lg)
+        }
+    }
+}
+
+struct JulesIntroView: View {
+    let onComplete: () -> Void
+    
+    var body: some View {
+        VStack(spacing: Spacing.xl) {
+            Spacer()
+            
+            Text("Meet Jules")
+                .font(.julHeadline1())
+                .foregroundColor(.julTextPrimary)
+            
+            Text("Your AI dating assistant is ready to help you find meaningful connections.")
+                .font(.julBodyLarge())
+                .foregroundColor(.julTextSecondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, Spacing.lg)
+            
+            Spacer()
+            
+            JulesButton(title: "Start Matching", style: .primary) {
+                onComplete()
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.bottom, Spacing.xl)
+        }
+    }
+}
+

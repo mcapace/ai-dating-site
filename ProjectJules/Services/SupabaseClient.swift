@@ -2,99 +2,33 @@
 //  SupabaseClient.swift
 //  ProjectJules
 //
-//  Supabase Configuration & Client
+//  Supabase client configuration
 //
 
 import Foundation
 import Supabase
 
-// MARK: - Supabase Configuration
-enum SupabaseConfig {
-    static let url = URL(string: Config.supabaseURL)!
-    static let anonKey = Config.supabaseAnonKey
-}
-
-// MARK: - Supabase Client Singleton
 class SupabaseManager {
     static let shared = SupabaseManager()
-
+    
     let client: SupabaseClient
-
+    
     private init() {
-        client = SupabaseClient(
-            supabaseURL: SupabaseConfig.url,
-            supabaseKey: SupabaseConfig.anonKey
+        guard let url = URL(string: Config.supabaseURL) else {
+            fatalError("Invalid Supabase URL")
+        }
+        self.client = SupabaseClient(
+            supabaseURL: url,
+            supabaseKey: Config.supabaseAnonKey
         )
     }
-
-    // MARK: - Database Tables
-    enum Table: String {
-        case users
-        case profiles
-        case photos
-        case preferences
-        case userNeighborhoods = "user_neighborhoods"
-        case neighborhoods
-        case cities
-        case julesConversations = "jules_conversations"
-        case julesMessages = "jules_messages"
-        case learnedPreferences = "learned_preferences"
-        case communicationProfiles = "communication_profiles"
-        case matches
-        case intros
-        case sparkResponses = "spark_responses"
-        case userAvailability = "user_availability"
-        case venues
-        case dateFeedback = "date_feedback"
-        case sparkPrompts = "spark_prompts"
-        case notifications
+    
+    // Convenience accessors
+    var auth: AuthClient {
+        client.auth
     }
-
-    // MARK: - Storage Buckets
-    enum Bucket: String {
-        case avatars
-        case voiceNotes = "voice-notes"
-    }
+    
+    // Access database and storage directly through client
+    // (Types are inferred from Supabase SDK)
 }
 
-// MARK: - Database Query Helpers
-extension SupabaseManager {
-    var database: PostgrestClient {
-        client.from("")  // We'll use from() directly
-    }
-
-    func from(_ table: Table) -> PostgrestQueryBuilder {
-        client.from(table.rawValue)
-    }
-
-    func storage(_ bucket: Bucket) -> StorageFileApi {
-        client.storage.from(bucket.rawValue)
-    }
-}
-
-// MARK: - Error Handling
-enum SupabaseError: LocalizedError {
-    case notAuthenticated
-    case notFound
-    case invalidData
-    case networkError(Error)
-    case serverError(String)
-    case unknown
-
-    var errorDescription: String? {
-        switch self {
-        case .notAuthenticated:
-            return "Please sign in to continue"
-        case .notFound:
-            return "The requested data was not found"
-        case .invalidData:
-            return "Invalid data received"
-        case .networkError(let error):
-            return "Network error: \(error.localizedDescription)"
-        case .serverError(let message):
-            return "Server error: \(message)"
-        case .unknown:
-            return "An unknown error occurred"
-        }
-    }
-}

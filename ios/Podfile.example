@@ -1,0 +1,32 @@
+# Uncomment the following line to define a global platform for your project
+platform :ios, '16.0'
+
+target 'ProjectJules' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Supabase Swift client
+  pod 'Supabase', '~> 2.0'
+
+  # Lottie animations
+  pod 'lottie-ios', '~> 4.0'
+
+  target 'ProjectJulesTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'ProjectJulesUITests' do
+    # Pods for testing
+  end
+end
+
+# Post-install hook to configure build settings
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+    end
+  end
+end
+

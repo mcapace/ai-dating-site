@@ -2,82 +2,73 @@
 //  ProjectJulesApp.swift
 //  ProjectJules
 //
-//  Your AI Matchmaker
+//  Main app entry point with routing
 //
 
 import SwiftUI
 
 @main
 struct ProjectJulesApp: App {
-    @StateObject private var appState = AppState()
-    @StateObject private var authService = AuthService.shared
-
+    @StateObject private var authService = AuthService()
+    @State private var showSplash = true
+    
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environmentObject(appState)
-                .environmentObject(authService)
-                .preferredColorScheme(appState.colorScheme)
-        }
-    }
-}
-
-// MARK: - Root View
-struct RootView: View {
-    @EnvironmentObject var appState: AppState
-    @EnvironmentObject var authService: AuthService
-
-    var body: some View {
-        Group {
-            switch appState.currentFlow {
-            case .splash:
-                SplashView()
-                    .transition(.opacity)
-
-            case .onboarding:
-                OnboardingFlowView()
-                    .transition(.opacity)
-
-            case .main:
-                MainTabView()
-                    .transition(.opacity)
-            }
-        }
-        .animation(.easeInOut(duration: 0.3), value: appState.currentFlow)
-        .onAppear {
-            checkAuthState()
-        }
-    }
-
-    private func checkAuthState() {
-        Task {
-            await authService.checkSession()
-
-            await MainActor.run {
-                withAnimation {
-                    if authService.isAuthenticated {
-                        if authService.currentUser?.hasCompletedOnboarding == true {
-                            appState.currentFlow = .main
-                        } else {
-                            appState.currentFlow = .onboarding
+            ZStack {
+                if showSplash {
+                    SplashView()
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                withAnimation {
+                                    showSplash = false
+                                }
+                            }
                         }
-                    } else {
-                        appState.currentFlow = .onboarding
-                    }
+                } else {
+                    ContentView()
+                        .environmentObject(authService)
                 }
             }
         }
     }
 }
 
-// MARK: - App State
-class AppState: ObservableObject {
-    @Published var currentFlow: AppFlow = .splash
-    @Published var colorScheme: ColorScheme? = nil
-
-    enum AppFlow {
-        case splash
-        case onboarding
-        case main
+struct ContentView: View {
+    @EnvironmentObject var authService: AuthService
+    
+    var body: some View {
+        Group {
+            if authService.isAuthenticated {
+                MainTabView()
+            } else {
+                OnboardingFlowView()
+            }
+        }
     }
 }
+
+struct SplashView: View {
+    var body: some View {
+        ZStack {
+            Color.julBackground
+                .ignoresSafeArea()
+            
+            VStack(spacing: Spacing.lg) {
+                // Logo placeholder
+                RoundedRectangle(cornerRadius: Radius.xl)
+                    .fill(Color.julTerracotta)
+                    .frame(width: 120, height: 120)
+                    .overlay(
+                        Text("J")
+                            .font(.system(size: 72, weight: .bold))
+                            .foregroundColor(.white)
+                    )
+                
+                Text("Jules")
+                    .font(.julHeadline1())
+                    .foregroundColor(.julTextPrimary)
+            }
+        }
+    }
+}
+
