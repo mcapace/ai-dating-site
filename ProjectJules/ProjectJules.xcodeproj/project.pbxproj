@@ -1,0 +1,564 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04B3306FFC0BDEEFA9B619A7 /* JulesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D1058FB28D43BCD4BF91DF /* JulesButton.swift */; };
+		07420FEED2A8E26A1E861916 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A209AAB3AE064A9609308F /* UserService.swift */; };
+		173A6D867646BA0B6DA3C91D /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E94B765CDB7CA8562CBF8E /* Spacing.swift */; };
+		18915E8E26828F21D63AC2A9 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DF537B914F9525A67CF0A /* AuthService.swift */; };
+		2A9ED210B1D9D9CA464AD1DF /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A072CB632F15F67276CB0B /* Colors.swift */; };
+		314C72024EE51EEE74472451 /* JulesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB721F42314FF1AE54E24583 /* JulesService.swift */; };
+		3421A414E72659F2FCF1F89E /* JulesInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 582B624FB735291380153AC7 /* JulesInput.swift */; };
+		3AA1E2DEA83E723AF30383D0 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB33DA086CE19AEB40E0BE4 /* EditProfileView.swift */; };
+		3E651EDEEC7B62B2A7019D94 /* JulesCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C94996A2C349BC5B0EBA90 /* JulesCard.swift */; };
+		4D00F5D951D452F4A1D03B49 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 841A258F7EFACA5798AFBBBE /* Supabase */; };
+		5D47BDC6F858A3C4A679F6E1 /* PhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D4AADC95EC6E86B7680B33 /* PhotosView.swift */; };
+		620911A66229A24FD7D03262 /* ProjectJulesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019D76BF5A1E510E78752BF2 /* ProjectJulesApp.swift */; };
+		6D36B502D1BC16EDF31FFA04 /* SupportViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0E353653587872910B7C25 /* SupportViews.swift */; };
+		6FAD1567B571954679584391 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35F6190D3582EC2B13E4048 /* SplashView.swift */; };
+		768884213D42CE76B3375E34 /* IntroDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C571701A161F1A40D4BEB3CF /* IntroDetailView.swift */; };
+		7CA44A3BE5BD7216F43BA6E2 /* SupabaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1A69E33DCE405C937D6E6B /* SupabaseClient.swift */; };
+		7D30AB04336744AACECA0DCE /* EditPreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352B4FA94DA74008844F3C9D /* EditPreferencesView.swift */; };
+		82126C9119212CD1C300280D /* MatchProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502DAB1501E00690E7A53263 /* MatchProfileView.swift */; };
+		8DBC3962876BAB88A4F79D4E /* LookingForView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFE6F09B4E4E61C82F38DF1 /* LookingForView.swift */; };
+		9DE8933DCF2DBBAB060F1FC0 /* PhoneInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF56C5C0AECB464FA917211 /* PhoneInputView.swift */; };
+		9ED2BCA5ADA958CA0C5C0567 /* Venue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0489F95976FFD58CE2DA352 /* Venue.swift */; };
+		A5197C052E4EE9C44F5E4A42 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D86DB3C98CD8BE4C1A97BE7 /* Match.swift */; };
+		AAA417A8A8B12349AF346416 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77980138186A862DB3A86251 /* Typography.swift */; };
+		AD0751DA76D943345209CD07 /* MeetJulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DEF7A84F4C598044F0A16F /* MeetJulesView.swift */; };
+		B1A47F9C58C464BDCD6053BA /* JulesConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE1809D4638CC7495B7E2D8 /* JulesConversation.swift */; };
+		B3E96F287CC7E48BB135F971 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7559C2A0058903FACDD8A378 /* SubscriptionView.swift */; };
+		BA03CB5A820C42A387B836E7 /* EditNeighborhoodsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035AED1262EF87BD01FC21B7 /* EditNeighborhoodsView.swift */; };
+		BF54B086B5335269FFBAB6E4 /* BasicInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287B57853C603666FEF48FC5 /* BasicInfoView.swift */; };
+		CC8F82479E3AB054B1512B14 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4CF9AA0C7B6DBAD1DA1483 /* WelcomeView.swift */; };
+		D802A647F392C4192AB80617 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34120A38EAD70F4C5C1598B /* Config.swift */; };
+		E2BD64164FE2709E4719A34C /* NeighborhoodsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7480FAE09ED18480058EF419 /* NeighborhoodsView.swift */; };
+		E7B50EF431B14799CEAB94D8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C106E9D8674152B242FC6BE /* User.swift */; };
+		F2AB5D003CB672F9B830EF45 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06ABF110642356F374B4614A /* MainTabView.swift */; };
+		F2BAF4AC6D3A5CEF68B7664B /* JulesChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FC788EF215C4ECD22ABCC1 /* JulesChat.swift */; };
+		F4B3E9FFB923CC445355B891 /* OnboardingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B4AD6E7B5D5D12846ED64B /* OnboardingFlowView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		019D76BF5A1E510E78752BF2 /* ProjectJulesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectJulesApp.swift; sourceTree = "<group>"; };
+		035AED1262EF87BD01FC21B7 /* EditNeighborhoodsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNeighborhoodsView.swift; sourceTree = "<group>"; };
+		06ABF110642356F374B4614A /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		0DB33DA086CE19AEB40E0BE4 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
+		287B57853C603666FEF48FC5 /* BasicInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicInfoView.swift; sourceTree = "<group>"; };
+		28E94B765CDB7CA8562CBF8E /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
+		33C94996A2C349BC5B0EBA90 /* JulesCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JulesCard.swift; sourceTree = "<group>"; };
+		352B4FA94DA74008844F3C9D /* EditPreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPreferencesView.swift; sourceTree = "<group>"; };
+		3BFE6F09B4E4E61C82F38DF1 /* LookingForView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookingForView.swift; sourceTree = "<group>"; };
+		4B1A69E33DCE405C937D6E6B /* SupabaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseClient.swift; sourceTree = "<group>"; };
+		502DAB1501E00690E7A53263 /* MatchProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchProfileView.swift; sourceTree = "<group>"; };
+		582B624FB735291380153AC7 /* JulesInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JulesInput.swift; sourceTree = "<group>"; };
+		5D86DB3C98CD8BE4C1A97BE7 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		7480FAE09ED18480058EF419 /* NeighborhoodsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodsView.swift; sourceTree = "<group>"; };
+		7559C2A0058903FACDD8A378 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
+		77980138186A862DB3A86251 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		7A0E353653587872910B7C25 /* SupportViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportViews.swift; sourceTree = "<group>"; };
+		8C106E9D8674152B242FC6BE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		9C4CF9AA0C7B6DBAD1DA1483 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		A34120A38EAD70F4C5C1598B /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		A3FC788EF215C4ECD22ABCC1 /* JulesChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JulesChat.swift; sourceTree = "<group>"; };
+		AB721F42314FF1AE54E24583 /* JulesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JulesService.swift; sourceTree = "<group>"; };
+		ACE1809D4638CC7495B7E2D8 /* JulesConversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JulesConversation.swift; sourceTree = "<group>"; };
+		B865E75F9A1E30311C354BC3 /* ProjectJules.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectJules.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAF56C5C0AECB464FA917211 /* PhoneInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneInputView.swift; sourceTree = "<group>"; };
+		C1DEF7A84F4C598044F0A16F /* MeetJulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetJulesView.swift; sourceTree = "<group>"; };
+		C571701A161F1A40D4BEB3CF /* IntroDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroDetailView.swift; sourceTree = "<group>"; };
+		CEFA85472F11CED400B7E007 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
+		CEFA85482F11CED400B7E007 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
+		CEFA85492F11CED400B7E007 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
+		CEFA854A2F11CED400B7E007 /* PlayfairDisplay-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlayfairDisplay-Regular.ttf"; sourceTree = "<group>"; };
+		CEFA854B2F11CED400B7E007 /* PlayfairDisplay-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlayfairDisplay-SemiBold.ttf"; sourceTree = "<group>"; };
+		D0489F95976FFD58CE2DA352 /* Venue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Venue.swift; sourceTree = "<group>"; };
+		D35F6190D3582EC2B13E4048 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		E2A209AAB3AE064A9609308F /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		E5B4AD6E7B5D5D12846ED64B /* OnboardingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowView.swift; sourceTree = "<group>"; };
+		E5D1058FB28D43BCD4BF91DF /* JulesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JulesButton.swift; sourceTree = "<group>"; };
+		EC6DF537B914F9525A67CF0A /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		F1A072CB632F15F67276CB0B /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		F3D4AADC95EC6E86B7680B33 /* PhotosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F5E805D87FB8451DE81B6662 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D00F5D951D452F4A1D03B49 /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1B999046B0DFC62488457CD2 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				F1A072CB632F15F67276CB0B /* Colors.swift */,
+				28E94B765CDB7CA8562CBF8E /* Spacing.swift */,
+				77980138186A862DB3A86251 /* Typography.swift */,
+				A242D71A925C220EDC9E9BE5 /* Components */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		256077A0B695BD5C81151AF0 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				06ABF110642356F374B4614A /* MainTabView.swift */,
+				D35F6190D3582EC2B13E4048 /* SplashView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		51B359EC13BC0642CEDBF9DA /* Match */ = {
+			isa = PBXGroup;
+			children = (
+				502DAB1501E00690E7A53263 /* MatchProfileView.swift */,
+			);
+			path = Match;
+			sourceTree = "<group>";
+		};
+		5345251020EA93B36328BFB6 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A34120A38EAD70F4C5C1598B /* Config.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		965CF5DEBB34AC957EA1F75B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B865E75F9A1E30311C354BC3 /* ProjectJules.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9A0DE6BFC742ACEFABF56FFB /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				035AED1262EF87BD01FC21B7 /* EditNeighborhoodsView.swift */,
+				352B4FA94DA74008844F3C9D /* EditPreferencesView.swift */,
+				0DB33DA086CE19AEB40E0BE4 /* EditProfileView.swift */,
+				7559C2A0058903FACDD8A378 /* SubscriptionView.swift */,
+				7A0E353653587872910B7C25 /* SupportViews.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		A242D71A925C220EDC9E9BE5 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				E5D1058FB28D43BCD4BF91DF /* JulesButton.swift */,
+				33C94996A2C349BC5B0EBA90 /* JulesCard.swift */,
+				A3FC788EF215C4ECD22ABCC1 /* JulesChat.swift */,
+				582B624FB735291380153AC7 /* JulesInput.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A9F8FEA7FCA244ADF2271098 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				019D76BF5A1E510E78752BF2 /* ProjectJulesApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		CB0F92282253E9A0E72CCC47 /* Intros */ = {
+			isa = PBXGroup;
+			children = (
+				C571701A161F1A40D4BEB3CF /* IntroDetailView.swift */,
+			);
+			path = Intros;
+			sourceTree = "<group>";
+		};
+		CBD8D6B04FD955A792A7FDAD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				ACE1809D4638CC7495B7E2D8 /* JulesConversation.swift */,
+				5D86DB3C98CD8BE4C1A97BE7 /* Match.swift */,
+				8C106E9D8674152B242FC6BE /* User.swift */,
+				D0489F95976FFD58CE2DA352 /* Venue.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CEFA854C2F11CED400B7E007 /* Fonts 2 */ = {
+			isa = PBXGroup;
+			children = (
+				CEFA85472F11CED400B7E007 /* Inter-Medium.ttf */,
+				CEFA85482F11CED400B7E007 /* Inter-Regular.ttf */,
+				CEFA85492F11CED400B7E007 /* Inter-SemiBold.ttf */,
+				CEFA854A2F11CED400B7E007 /* PlayfairDisplay-Regular.ttf */,
+				CEFA854B2F11CED400B7E007 /* PlayfairDisplay-SemiBold.ttf */,
+			);
+			path = "Fonts 2";
+			sourceTree = "<group>";
+		};
+		DC60D1F8795D83A8DE34C2AD /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				287B57853C603666FEF48FC5 /* BasicInfoView.swift */,
+				3BFE6F09B4E4E61C82F38DF1 /* LookingForView.swift */,
+				C1DEF7A84F4C598044F0A16F /* MeetJulesView.swift */,
+				7480FAE09ED18480058EF419 /* NeighborhoodsView.swift */,
+				E5B4AD6E7B5D5D12846ED64B /* OnboardingFlowView.swift */,
+				BAF56C5C0AECB464FA917211 /* PhoneInputView.swift */,
+				F3D4AADC95EC6E86B7680B33 /* PhotosView.swift */,
+				9C4CF9AA0C7B6DBAD1DA1483 /* WelcomeView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		E209F319D85A5578C6C4B83B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CB0F92282253E9A0E72CCC47 /* Intros */,
+				256077A0B695BD5C81151AF0 /* Main */,
+				51B359EC13BC0642CEDBF9DA /* Match */,
+				DC60D1F8795D83A8DE34C2AD /* Onboarding */,
+				9A0DE6BFC742ACEFABF56FFB /* Settings */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		EC1928EB50FDB7DC047B3521 = {
+			isa = PBXGroup;
+			children = (
+				CEFA854C2F11CED400B7E007 /* Fonts 2 */,
+				A9F8FEA7FCA244ADF2271098 /* App */,
+				5345251020EA93B36328BFB6 /* Config */,
+				1B999046B0DFC62488457CD2 /* DesignSystem */,
+				CBD8D6B04FD955A792A7FDAD /* Models */,
+				FE0B8F0F872301EAFC3360FB /* Services */,
+				E209F319D85A5578C6C4B83B /* Views */,
+				965CF5DEBB34AC957EA1F75B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FE0B8F0F872301EAFC3360FB /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				EC6DF537B914F9525A67CF0A /* AuthService.swift */,
+				AB721F42314FF1AE54E24583 /* JulesService.swift */,
+				4B1A69E33DCE405C937D6E6B /* SupabaseClient.swift */,
+				E2A209AAB3AE064A9609308F /* UserService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		35788990370E2DB6C867100A /* ProjectJules */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2AE240166FE8A6F4069EE494 /* Build configuration list for PBXNativeTarget "ProjectJules" */;
+			buildPhases = (
+				B8E5820EEBF4CC0819D50831 /* Sources */,
+				F5E805D87FB8451DE81B6662 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ProjectJules;
+			packageProductDependencies = (
+				841A258F7EFACA5798AFBBBE /* Supabase */,
+			);
+			productName = ProjectJules;
+			productReference = B865E75F9A1E30311C354BC3 /* ProjectJules.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		46633DA17326CEE42F101E37 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					35788990370E2DB6C867100A = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = D54248138BC193AA54CA2A5E /* Build configuration list for PBXProject "ProjectJules" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = EC1928EB50FDB7DC047B3521;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0FCEF84016C60B932EC5052C /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				35788990370E2DB6C867100A /* ProjectJules */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B8E5820EEBF4CC0819D50831 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18915E8E26828F21D63AC2A9 /* AuthService.swift in Sources */,
+				BF54B086B5335269FFBAB6E4 /* BasicInfoView.swift in Sources */,
+				2A9ED210B1D9D9CA464AD1DF /* Colors.swift in Sources */,
+				D802A647F392C4192AB80617 /* Config.swift in Sources */,
+				BA03CB5A820C42A387B836E7 /* EditNeighborhoodsView.swift in Sources */,
+				7D30AB04336744AACECA0DCE /* EditPreferencesView.swift in Sources */,
+				3AA1E2DEA83E723AF30383D0 /* EditProfileView.swift in Sources */,
+				768884213D42CE76B3375E34 /* IntroDetailView.swift in Sources */,
+				04B3306FFC0BDEEFA9B619A7 /* JulesButton.swift in Sources */,
+				3E651EDEEC7B62B2A7019D94 /* JulesCard.swift in Sources */,
+				F2BAF4AC6D3A5CEF68B7664B /* JulesChat.swift in Sources */,
+				B1A47F9C58C464BDCD6053BA /* JulesConversation.swift in Sources */,
+				3421A414E72659F2FCF1F89E /* JulesInput.swift in Sources */,
+				314C72024EE51EEE74472451 /* JulesService.swift in Sources */,
+				8DBC3962876BAB88A4F79D4E /* LookingForView.swift in Sources */,
+				F2AB5D003CB672F9B830EF45 /* MainTabView.swift in Sources */,
+				A5197C052E4EE9C44F5E4A42 /* Match.swift in Sources */,
+				82126C9119212CD1C300280D /* MatchProfileView.swift in Sources */,
+				AD0751DA76D943345209CD07 /* MeetJulesView.swift in Sources */,
+				E2BD64164FE2709E4719A34C /* NeighborhoodsView.swift in Sources */,
+				F4B3E9FFB923CC445355B891 /* OnboardingFlowView.swift in Sources */,
+				9DE8933DCF2DBBAB060F1FC0 /* PhoneInputView.swift in Sources */,
+				5D47BDC6F858A3C4A679F6E1 /* PhotosView.swift in Sources */,
+				620911A66229A24FD7D03262 /* ProjectJulesApp.swift in Sources */,
+				173A6D867646BA0B6DA3C91D /* Spacing.swift in Sources */,
+				6FAD1567B571954679584391 /* SplashView.swift in Sources */,
+				B3E96F287CC7E48BB135F971 /* SubscriptionView.swift in Sources */,
+				7CA44A3BE5BD7216F43BA6E2 /* SupabaseClient.swift in Sources */,
+				6D36B502D1BC16EDF31FFA04 /* SupportViews.swift in Sources */,
+				AAA417A8A8B12349AF346416 /* Typography.swift in Sources */,
+				E7B50EF431B14799CEAB94D8 /* User.swift in Sources */,
+				07420FEED2A8E26A1E861916 /* UserService.swift in Sources */,
+				9ED2BCA5ADA958CA0C5C0567 /* Venue.swift in Sources */,
+				CC8F82479E3AB054B1512B14 /* WelcomeView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		36A026247DFE2767D0BC5B86 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		74C68A59987E011B9F49C657 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8U6V3PNEAC;
+				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jules.ProjectJules;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A60EDE5601F705B6AF51B3C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8U6V3PNEAC;
+				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jules.ProjectJules;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AE0D1D2D4DDE45312E3D8319 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2AE240166FE8A6F4069EE494 /* Build configuration list for PBXNativeTarget "ProjectJules" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				74C68A59987E011B9F49C657 /* Debug */,
+				A60EDE5601F705B6AF51B3C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D54248138BC193AA54CA2A5E /* Build configuration list for PBXProject "ProjectJules" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE0D1D2D4DDE45312E3D8319 /* Debug */,
+				36A026247DFE2767D0BC5B86 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0FCEF84016C60B932EC5052C /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		841A258F7EFACA5798AFBBBE /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0FCEF84016C60B932EC5052C /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 46633DA17326CEE42F101E37 /* Project object */;
+}

@@ -88,7 +88,7 @@ struct CurrentPlanCard: View {
             // Plan Icon
             ZStack {
                 Circle()
-                    .fill(tier == .free ? Color.julInputBackground : LinearGradient.julPremiumGradient)
+                    .fill(tier == .free ? AnyShapeStyle(Color.julInputBackground) : AnyShapeStyle(LinearGradient.julPremiumGradient))
                     .frame(width: 64, height: 64)
 
                 Image(systemName: tier == .free ? "person.fill" : "crown.fill")

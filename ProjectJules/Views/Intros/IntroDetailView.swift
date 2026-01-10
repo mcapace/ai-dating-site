@@ -239,7 +239,7 @@ struct SparkExchangeSection: View {
 
 // MARK: - Spark Prompt Card
 struct SparkPromptCard: View {
-    let prompt: SparkPrompt
+    let prompt: SparkPromptDisplay
     let myResponse: String?
     let theirResponse: String?
     let matchName: String
@@ -346,7 +346,7 @@ struct SparkProgressIndicator: View {
 
 // MARK: - Spark Response Sheet
 struct SparkResponseSheet: View {
-    let prompt: SparkPrompt
+    let prompt: SparkPromptDisplay
     let onSubmit: (String) -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -685,9 +685,9 @@ struct VenueCard: View {
 
                 // Tags
                 HStack(spacing: JulesSpacing.xs) {
-                    JulesTag(text: venue.venueType.rawValue.capitalized)
-                    JulesTag(text: venue.priceRange.displayString)
-                    JulesTag(text: venue.vibe.rawValue.capitalized)
+                    JulesTag(text: venue.venueType.displayName)
+                    JulesTag(text: venue.priceRange.rawValue)
+                    JulesTag(text: venue.vibe.displayName)
                 }
 
                 // Directions button
@@ -751,9 +751,9 @@ struct CompletedDateSection: View {
                         FeedbackButton(
                             emoji: "sparkles",
                             label: "Definitely!",
-                            isSelected: viewModel.selectedRating == .excellent
+                            isSelected: viewModel.selectedRating == .amazing
                         ) {
-                            viewModel.selectedRating = .excellent
+                            viewModel.selectedRating = .amazing
                         }
 
                         FeedbackButton(
@@ -767,17 +767,17 @@ struct CompletedDateSection: View {
                         FeedbackButton(
                             emoji: "face.smiling",
                             label: "Just friends",
-                            isSelected: viewModel.selectedRating == .neutral
+                            isSelected: viewModel.selectedRating == .fine
                         ) {
-                            viewModel.selectedRating = .neutral
+                            viewModel.selectedRating = .fine
                         }
 
                         FeedbackButton(
                             emoji: "xmark",
                             label: "No",
-                            isSelected: viewModel.selectedRating == .poor
+                            isSelected: viewModel.selectedRating == .notGreat
                         ) {
-                            viewModel.selectedRating = .poor
+                            viewModel.selectedRating = .notGreat
                         }
                     }
 
@@ -869,6 +869,14 @@ struct CancelledSection: View {
     }
 }
 
+// MARK: - View-Specific Spark Prompt Model
+struct SparkPromptDisplay: Identifiable {
+    let id: String
+    let promptText: String
+    let category: SparkPromptCategory
+    let allowVoiceNote: Bool
+}
+
 // MARK: - View Model
 @MainActor
 class IntroDetailViewModel: ObservableObject {
@@ -876,10 +884,10 @@ class IntroDetailViewModel: ObservableObject {
 
     @Published var matchName: String = ""
     @Published var matchPhotoURL: String = ""
-    @Published var sparkPrompts: [SparkPrompt] = []
+    @Published var sparkPrompts: [SparkPromptDisplay] = []
     @Published var myResponses: [String: String] = [:]
     @Published var theirResponses: [String: String] = [:]
-    @Published var selectedPrompt: SparkPrompt?
+    @Published var selectedPrompt: SparkPromptDisplay?
     @Published var selectedTimeSlots: Set<String> = []
     @Published var matchAvailability: [String] = []
     @Published var venue: Venue?
@@ -910,7 +918,7 @@ class IntroDetailViewModel: ObservableObject {
 
     init(intro: IntroListItem) {
         self.intro = intro
-        self.matchName = intro.names.components(separatedBy: " x ").first ?? intro.names
+        self.matchName = intro.names.components(separatedBy: " × ").first ?? intro.names
         self.matchPhotoURL = intro.photoURL
 
         // Load mock spark prompts
@@ -919,22 +927,22 @@ class IntroDetailViewModel: ObservableObject {
 
     private func loadSparkPrompts() {
         sparkPrompts = [
-            SparkPrompt(
+            SparkPromptDisplay(
                 id: "1",
-                category: .icebreaker,
                 promptText: "What's something you're weirdly passionate about?",
+                category: .fun,
                 allowVoiceNote: true
             ),
-            SparkPrompt(
+            SparkPromptDisplay(
                 id: "2",
-                category: .values,
                 promptText: "What does a perfect Sunday look like for you?",
+                category: .values,
                 allowVoiceNote: true
             ),
-            SparkPrompt(
+            SparkPromptDisplay(
                 id: "3",
-                category: .lifestyle,
                 promptText: "What's your go-to comfort food?",
+                category: .lifestyle,
                 allowVoiceNote: false
             )
         ]
@@ -976,3 +984,4 @@ class IntroDetailViewModel: ObservableObject {
         )
     )
 }
+

@@ -392,3 +392,4 @@ struct ProfileMenuItem: View {
     MainTabView()
         .environmentObject(AuthService.shared)
 }
+

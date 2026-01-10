@@ -51,6 +51,13 @@ enum UserStatus: String, Codable {
 enum SubscriptionTier: String, Codable {
     case free
     case premium
+    
+    var displayName: String {
+        switch self {
+        case .free: return "Free"
+        case .premium: return "Premium"
+        }
+    }
 }
 
 // MARK: - User Profile
@@ -300,3 +307,4 @@ enum PreferenceType: String, Codable {
     case hardNo = "hard_no"
     case inferred
 }
+

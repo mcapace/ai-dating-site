@@ -206,3 +206,4 @@ After basic setup:
 ## Support
 
 For questions, contact support@projectjules.app
+

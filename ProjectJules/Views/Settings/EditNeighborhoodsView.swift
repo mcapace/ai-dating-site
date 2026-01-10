@@ -248,61 +248,62 @@ class EditNeighborhoodsViewModel: ObservableObject {
 
     private func loadData() {
         // NYC neighborhoods grouped by area
+        // Note: Using approximate coordinates for NYC neighborhoods
         neighborhoodGroups = [
             NeighborhoodGroup(
                 name: "Manhattan - Downtown",
                 neighborhoods: [
-                    Neighborhood(id: "tribeca", cityId: "nyc", name: "Tribeca", isActive: true),
-                    Neighborhood(id: "soho", cityId: "nyc", name: "SoHo", isActive: true),
-                    Neighborhood(id: "west_village", cityId: "nyc", name: "West Village", isActive: true),
-                    Neighborhood(id: "east_village", cityId: "nyc", name: "East Village", isActive: true),
-                    Neighborhood(id: "lower_east_side", cityId: "nyc", name: "Lower East Side", isActive: true),
-                    Neighborhood(id: "financial_district", cityId: "nyc", name: "Financial District", isActive: true),
-                    Neighborhood(id: "chelsea", cityId: "nyc", name: "Chelsea", isActive: true),
-                    Neighborhood(id: "greenwich_village", cityId: "nyc", name: "Greenwich Village", isActive: true)
+                    Neighborhood(id: "tribeca", cityId: "nyc", name: "Tribeca", displayName: "Tribeca", latitude: 40.7163, longitude: -74.0086),
+                    Neighborhood(id: "soho", cityId: "nyc", name: "SoHo", displayName: "SoHo", latitude: 40.7231, longitude: -74.0026),
+                    Neighborhood(id: "west_village", cityId: "nyc", name: "West Village", displayName: "West Village", latitude: 40.7358, longitude: -74.0035),
+                    Neighborhood(id: "east_village", cityId: "nyc", name: "East Village", displayName: "East Village", latitude: 40.7265, longitude: -73.9815),
+                    Neighborhood(id: "lower_east_side", cityId: "nyc", name: "Lower East Side", displayName: "Lower East Side", latitude: 40.7150, longitude: -73.9843),
+                    Neighborhood(id: "financial_district", cityId: "nyc", name: "Financial District", displayName: "Financial District", latitude: 40.7074, longitude: -74.0113),
+                    Neighborhood(id: "chelsea", cityId: "nyc", name: "Chelsea", displayName: "Chelsea", latitude: 40.7465, longitude: -74.0014),
+                    Neighborhood(id: "greenwich_village", cityId: "nyc", name: "Greenwich Village", displayName: "Greenwich Village", latitude: 40.7336, longitude: -74.0027)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Manhattan - Midtown",
                 neighborhoods: [
-                    Neighborhood(id: "midtown_east", cityId: "nyc", name: "Midtown East", isActive: true),
-                    Neighborhood(id: "midtown_west", cityId: "nyc", name: "Midtown West", isActive: true),
-                    Neighborhood(id: "hells_kitchen", cityId: "nyc", name: "Hell's Kitchen", isActive: true),
-                    Neighborhood(id: "gramercy", cityId: "nyc", name: "Gramercy", isActive: true),
-                    Neighborhood(id: "flatiron", cityId: "nyc", name: "Flatiron", isActive: true),
-                    Neighborhood(id: "murray_hill", cityId: "nyc", name: "Murray Hill", isActive: true)
+                    Neighborhood(id: "midtown_east", cityId: "nyc", name: "Midtown East", displayName: "Midtown East", latitude: 40.7549, longitude: -73.9840),
+                    Neighborhood(id: "midtown_west", cityId: "nyc", name: "Midtown West", displayName: "Midtown West", latitude: 40.7549, longitude: -73.9840),
+                    Neighborhood(id: "hells_kitchen", cityId: "nyc", name: "Hell's Kitchen", displayName: "Hell's Kitchen", latitude: 40.7638, longitude: -73.9918),
+                    Neighborhood(id: "gramercy", cityId: "nyc", name: "Gramercy", displayName: "Gramercy", latitude: 40.7368, longitude: -73.9849),
+                    Neighborhood(id: "flatiron", cityId: "nyc", name: "Flatiron", displayName: "Flatiron", latitude: 40.7411, longitude: -73.9897),
+                    Neighborhood(id: "murray_hill", cityId: "nyc", name: "Murray Hill", displayName: "Murray Hill", latitude: 40.7479, longitude: -73.9757)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Manhattan - Uptown",
                 neighborhoods: [
-                    Neighborhood(id: "upper_east_side", cityId: "nyc", name: "Upper East Side", isActive: true),
-                    Neighborhood(id: "upper_west_side", cityId: "nyc", name: "Upper West Side", isActive: true),
-                    Neighborhood(id: "harlem", cityId: "nyc", name: "Harlem", isActive: true),
-                    Neighborhood(id: "morningside_heights", cityId: "nyc", name: "Morningside Heights", isActive: true)
+                    Neighborhood(id: "upper_east_side", cityId: "nyc", name: "Upper East Side", displayName: "Upper East Side", latitude: 40.7736, longitude: -73.9566),
+                    Neighborhood(id: "upper_west_side", cityId: "nyc", name: "Upper West Side", displayName: "Upper West Side", latitude: 40.7870, longitude: -73.9754),
+                    Neighborhood(id: "harlem", cityId: "nyc", name: "Harlem", displayName: "Harlem", latitude: 40.8079, longitude: -73.9454),
+                    Neighborhood(id: "morningside_heights", cityId: "nyc", name: "Morningside Heights", displayName: "Morningside Heights", latitude: 40.8080, longitude: -73.9620)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Brooklyn",
                 neighborhoods: [
-                    Neighborhood(id: "williamsburg", cityId: "nyc", name: "Williamsburg", isActive: true),
-                    Neighborhood(id: "dumbo", cityId: "nyc", name: "DUMBO", isActive: true),
-                    Neighborhood(id: "brooklyn_heights", cityId: "nyc", name: "Brooklyn Heights", isActive: true),
-                    Neighborhood(id: "cobble_hill", cityId: "nyc", name: "Cobble Hill", isActive: true),
-                    Neighborhood(id: "park_slope", cityId: "nyc", name: "Park Slope", isActive: true),
-                    Neighborhood(id: "fort_greene", cityId: "nyc", name: "Fort Greene", isActive: true),
-                    Neighborhood(id: "greenpoint", cityId: "nyc", name: "Greenpoint", isActive: true),
-                    Neighborhood(id: "bushwick", cityId: "nyc", name: "Bushwick", isActive: true),
-                    Neighborhood(id: "prospect_heights", cityId: "nyc", name: "Prospect Heights", isActive: true)
+                    Neighborhood(id: "williamsburg", cityId: "nyc", name: "Williamsburg", displayName: "Williamsburg", latitude: 40.7081, longitude: -73.9571),
+                    Neighborhood(id: "dumbo", cityId: "nyc", name: "DUMBO", displayName: "DUMBO", latitude: 40.7033, longitude: -73.9881),
+                    Neighborhood(id: "brooklyn_heights", cityId: "nyc", name: "Brooklyn Heights", displayName: "Brooklyn Heights", latitude: 40.6962, longitude: -73.9973),
+                    Neighborhood(id: "cobble_hill", cityId: "nyc", name: "Cobble Hill", displayName: "Cobble Hill", latitude: 40.6865, longitude: -73.9962),
+                    Neighborhood(id: "park_slope", cityId: "nyc", name: "Park Slope", displayName: "Park Slope", latitude: 40.6712, longitude: -73.9776),
+                    Neighborhood(id: "fort_greene", cityId: "nyc", name: "Fort Greene", displayName: "Fort Greene", latitude: 40.6893, longitude: -73.9749),
+                    Neighborhood(id: "greenpoint", cityId: "nyc", name: "Greenpoint", displayName: "Greenpoint", latitude: 40.7295, longitude: -73.9545),
+                    Neighborhood(id: "bushwick", cityId: "nyc", name: "Bushwick", displayName: "Bushwick", latitude: 40.6943, longitude: -73.9212),
+                    Neighborhood(id: "prospect_heights", cityId: "nyc", name: "Prospect Heights", displayName: "Prospect Heights", latitude: 40.6776, longitude: -73.9690)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Other Boroughs",
                 neighborhoods: [
-                    Neighborhood(id: "astoria", cityId: "nyc", name: "Astoria", isActive: true),
-                    Neighborhood(id: "long_island_city", cityId: "nyc", name: "Long Island City", isActive: true),
-                    Neighborhood(id: "jersey_city", cityId: "nyc", name: "Jersey City", isActive: true),
-                    Neighborhood(id: "hoboken", cityId: "nyc", name: "Hoboken", isActive: true)
+                    Neighborhood(id: "astoria", cityId: "nyc", name: "Astoria", displayName: "Astoria", latitude: 40.7644, longitude: -73.9235),
+                    Neighborhood(id: "long_island_city", cityId: "nyc", name: "Long Island City", displayName: "Long Island City", latitude: 40.7448, longitude: -73.9485),
+                    Neighborhood(id: "jersey_city", cityId: "nyc", name: "Jersey City", displayName: "Jersey City", latitude: 40.7178, longitude: -74.0431),
+                    Neighborhood(id: "hoboken", cityId: "nyc", name: "Hoboken", displayName: "Hoboken", latitude: 40.7439, longitude: -74.0324)
                 ]
             )
         ]

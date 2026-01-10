@@ -316,7 +316,7 @@ class OnboardingViewModel: ObservableObject {
 
     func loadNeighborhoods() async {
         do {
-            let neighborhoods = try await neighborhoodService.getNeighborhoods(cityCode: "nyc")
+            let neighborhoods = try await neighborhoodService.getNeighborhoods(cityId: "nyc")
             await MainActor.run {
                 availableNeighborhoods = neighborhoods
             }

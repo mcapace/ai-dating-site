@@ -1,0 +1,96 @@
+name: ProjectJules
+options:
+  bundleIdPrefix: com.jules
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: en
+  xcodeVersion: "15.0"
+
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: 2.0.0
+
+targets:
+  ProjectJules:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: App
+      - path: Config
+      - path: DesignSystem
+      - path: Models
+      - path: Services
+      - path: Views
+    resources:
+      - path: Assets
+        type: folder
+      - path: Fonts/PlayfairDisplay-Regular.ttf
+      - path: Fonts/PlayfairDisplay-SemiBold.ttf
+      - path: Fonts/Inter-Regular.ttf
+      - path: Fonts/Inter-Medium.ttf
+      - path: Fonts/Inter-SemiBold.ttf
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDevelopmentRegion: en
+        CFBundleDisplayName: Jules
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleInfoDictionaryVersion: "6.0"
+        CFBundleName: $(PRODUCT_NAME)
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        LSRequiresIPhoneOS: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UILaunchScreen: {}
+        UIAppFonts:
+          - PlayfairDisplay-Regular.ttf
+          - PlayfairDisplay-SemiBold.ttf
+          - Inter-Regular.ttf
+          - Inter-Medium.ttf
+          - Inter-SemiBold.ttf
+    dependencies:
+      - package: Supabase
+        product: Supabase
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jules.ProjectJules
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: ""
+        INFOPLIST_FILE: Info.plist
+        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+        SWIFT_VERSION: "5.9"
+        TARGETED_DEVICE_FAMILY: "1,2"
+      configs:
+        Debug:
+          DEVELOPMENT_TEAM: ""
+        Release:
+          DEVELOPMENT_TEAM: ""
+    schemes:
+      ProjectJules:
+        build:
+          targets:
+            ProjectJules: all
+        run:
+          config: Debug
+        test:
+          config: Debug
+        profile:
+          config: Release
+        analyze:
+          config: Debug
+        archive:
+          config: Release

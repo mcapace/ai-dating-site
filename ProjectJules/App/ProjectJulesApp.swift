@@ -31,7 +31,12 @@ struct RootView: View {
         Group {
             switch appState.currentFlow {
             case .splash:
-                SplashView()
+                SplashView(onComplete: {
+                    // If still on splash after animation, trigger auth check/transition
+                    if appState.currentFlow == .splash {
+                        checkAuthState()
+                    }
+                })
                     .transition(.opacity)
 
             case .onboarding:

@@ -459,3 +459,4 @@ CREATE TRIGGER update_jules_conversations_updated_at BEFORE UPDATE ON public.jul
 CREATE TRIGGER update_communication_profiles_updated_at BEFORE UPDATE ON public.communication_profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_learned_preferences_updated_at BEFORE UPDATE ON public.learned_preferences FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_venues_updated_at BEFORE UPDATE ON public.venues FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+

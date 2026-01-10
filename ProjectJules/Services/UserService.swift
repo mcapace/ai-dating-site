@@ -91,8 +91,8 @@ class UserService {
 
         // Upload to storage
         try await supabase.storage(.avatars).upload(
-            path: filename,
-            file: imageData,
+            filename,
+            data: imageData,
             options: FileOptions(contentType: "image/jpeg")
         )
 

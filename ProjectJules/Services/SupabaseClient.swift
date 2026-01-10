@@ -10,8 +10,15 @@ import Supabase
 
 // MARK: - Supabase Configuration
 enum SupabaseConfig {
-    static let url = URL(string: Config.supabaseURL)!
-    static let anonKey = Config.supabaseAnonKey
+    static var url: URL {
+        guard let url = URL(string: Config.supabaseURL) else {
+            fatalError("Invalid Supabase URL: \(Config.supabaseURL). Please set SUPABASE_URL environment variable or update Config.swift")
+        }
+        return url
+    }
+    static var anonKey: String {
+        Config.supabaseAnonKey
+    }
 }
 
 // MARK: - Supabase Client Singleton
@@ -59,10 +66,6 @@ class SupabaseManager {
 
 // MARK: - Database Query Helpers
 extension SupabaseManager {
-    var database: PostgrestClient {
-        client.from("")  // We'll use from() directly
-    }
-
     func from(_ table: Table) -> PostgrestQueryBuilder {
         client.from(table.rawValue)
     }

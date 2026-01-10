@@ -309,14 +309,6 @@ struct IntroListItem: Identifiable {
     let status: IntroStatus
 }
 
-enum IntroStatus: String {
-    case sparkExchange = "spark_exchange"
-    case scheduling = "scheduling"
-    case scheduled = "scheduled"
-    case completed = "completed"
-    case cancelled = "cancelled"
-}
-
 // MARK: - Preview
 #Preview {
     ScrollView {

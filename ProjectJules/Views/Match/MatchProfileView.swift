@@ -33,7 +33,7 @@ struct MatchProfileView: View {
                         ProfileHeader(
                             name: viewModel.profile?.firstName ?? "",
                             age: viewModel.profile?.age ?? 0,
-                            location: viewModel.profile?.neighborhood ?? "",
+                            location: viewModel.location,
                             occupation: viewModel.profile?.occupation ?? ""
                         )
 
@@ -430,6 +430,7 @@ class MatchProfileViewModel: ObservableObject {
     @Published var julesTake: String?
     @Published var lookingFor: String?
     @Published var dealbreakers: [String] = []
+    @Published var location: String = ""
     @Published var showActions = true
     @Published var isLoading = false
 
@@ -465,6 +466,8 @@ class MatchProfileViewModel: ObservableObject {
         ]
 
         tags = ["5'6\"", "No kids", "Designer", "Yoga", "Coffee addict"]
+        
+        location = "West Village, NYC"  // TODO: Fetch from user neighborhoods
 
         julesTake = "You both said dive bars over cocktail bars, and she hates small talk as much as you do. Plus, you're both into architecture and have an unhealthy relationship with your plant collections."
 

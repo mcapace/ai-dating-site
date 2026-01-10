@@ -237,3 +237,4 @@ struct NYCNeighborhoods {
         ("lic_astoria", "LIC / Astoria", 40.7441, -73.9226),
     ]
 }
+

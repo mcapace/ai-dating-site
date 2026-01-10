@@ -92,7 +92,7 @@ struct ChatMessage: Identifiable, Equatable {
     var messageType: MessageType = .text
     var metadata: MessageMetadata? = nil
 
-    enum MessageType {
+    enum MessageType: Equatable {
         case text
         case matchCard
         case sparkPrompt
@@ -108,7 +108,7 @@ struct ChatMessage: Identifiable, Equatable {
     }
 }
 
-struct MessageMetadata {
+struct MessageMetadata: Equatable {
     var matchId: String?
     var quickReplies: [String]?
     var promptText: String?

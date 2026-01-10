@@ -9,11 +9,20 @@ import Foundation
 
 enum Config {
     // MARK: - Supabase
-    static let supabaseURL = "https://YOUR_PROJECT_ID.supabase.co"
-    static let supabaseAnonKey = "YOUR_SUPABASE_ANON_KEY"
+    // Reads from environment variable first, falls back to hardcoded value
+    static var supabaseURL: String {
+        ProcessInfo.processInfo.environment["SUPABASE_URL"] ?? "https://YOUR_PROJECT_ID.supabase.co"
+    }
+    
+    static var supabaseAnonKey: String {
+        ProcessInfo.processInfo.environment["SUPABASE_ANON_KEY"] ?? "YOUR_SUPABASE_ANON_KEY"
+    }
 
     // MARK: - Anthropic (Claude AI)
-    static let anthropicAPIKey = "YOUR_ANTHROPIC_API_KEY"
+    // Reads from environment variable first, falls back to hardcoded value
+    static var anthropicAPIKey: String {
+        ProcessInfo.processInfo.environment["ANTHROPIC_API_KEY"] ?? "YOUR_ANTHROPIC_API_KEY"
+    }
     static let anthropicModel = "claude-sonnet-4-20250514"
 
     // MARK: - App Settings

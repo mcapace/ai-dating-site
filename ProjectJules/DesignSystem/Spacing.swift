@@ -170,3 +170,4 @@ struct SafeAreaHelper {
             .first?.windows.first?.safeAreaInsets.bottom ?? 0
     }
 }
+

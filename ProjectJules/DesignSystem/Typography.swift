@@ -9,15 +9,15 @@ import SwiftUI
 
 // MARK: - Font Names
 enum JulesFont {
+    // Available fonts (must match Info.plist)
     static let serifRegular = "PlayfairDisplay-Regular"
-    static let serifMedium = "PlayfairDisplay-Medium"
     static let serifSemiBold = "PlayfairDisplay-SemiBold"
-    static let serifBold = "PlayfairDisplay-Bold"
 
     static let sansRegular = "Inter-Regular"
     static let sansMedium = "Inter-Medium"
     static let sansSemiBold = "Inter-SemiBold"
-    static let sansBold = "Inter-Bold"
+    
+    // Note: Medium and Bold variants not available, using SemiBold as substitute
 }
 
 // MARK: - Typography Styles
@@ -25,17 +25,17 @@ extension Font {
 
     // MARK: Headlines (Playfair Display)
 
-    /// Hero text - 34pt Medium
+    /// Hero text - 34pt SemiBold
     /// Usage: Main screen titles, match names
-    static let julHero = Font.custom(JulesFont.serifMedium, size: 34)
+    static let julHero = Font.custom(JulesFont.serifSemiBold, size: 34)
 
-    /// Title 1 - 28pt Medium
+    /// Title 1 - 28pt SemiBold
     /// Usage: Section headers, onboarding titles
-    static let julTitle1 = Font.custom(JulesFont.serifMedium, size: 28)
+    static let julTitle1 = Font.custom(JulesFont.serifSemiBold, size: 28)
 
-    /// Title 2 - 22pt Medium
+    /// Title 2 - 22pt SemiBold
     /// Usage: Card titles, feature headers
-    static let julTitle2 = Font.custom(JulesFont.serifMedium, size: 22)
+    static let julTitle2 = Font.custom(JulesFont.serifSemiBold, size: 22)
 
     /// Title 3 - 18pt SemiBold (Inter)
     /// Usage: Subsections, list headers
@@ -175,3 +175,4 @@ extension Text {
         }
     }
 }
+
