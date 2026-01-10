@@ -300,3 +300,234 @@ enum PreferenceType: String, Codable {
     case hardNo = "hard_no"
     case inferred
 }
+
+// MARK: - Match Signal (Every yes/no teaches Jules something)
+struct MatchSignal: Codable, Identifiable, Equatable {
+    let id: String
+    let userId: String
+    let matchUserId: String
+    var action: MatchAction
+    var matchProfile: MatchProfileSnapshot  // Snapshot of profile at time of decision
+    var timeToDecide: Int?  // Seconds - quick yes = strong interest
+    var askedJulesFirst: Bool  // Did they ask "tell me more"?
+    var priorityPassUsed: Bool
+    var source: SignalSource
+    var createdAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case matchUserId = "match_user_id"
+        case action
+        case matchProfile = "match_profile"
+        case timeToDecide = "time_to_decide"
+        case askedJulesFirst = "asked_jules_first"
+        case priorityPassUsed = "priority_pass_used"
+        case source
+        case createdAt = "created_at"
+    }
+}
+
+enum MatchAction: String, Codable {
+    case accepted           // Said yes
+    case declined           // Said no/pass
+    case expired            // Let it expire (passive no)
+    case superLiked         // Used priority pass
+    case secondDate         // Wanted another date after meeting
+    case noSecondDate       // Met but didn't want more
+}
+
+enum SignalSource: String, Codable {
+    case matchPresentation  // Initial match shown by Jules
+    case sparkExchange      // After Spark Exchange
+    case postDate           // After actual date
+    case conversation       // From chat with Jules
+}
+
+// MARK: - Profile Snapshot (What the match looked like when user decided)
+struct MatchProfileSnapshot: Codable, Equatable {
+    var age: Int
+    var gender: Gender
+    var heightInches: Int?
+    var occupation: String?
+    var education: String?
+    var ethnicity: String?
+    var hasChildren: Bool?
+    var wantsChildren: WantsChildren?
+    var religion: String?
+    var neighborhoods: [String]
+    var photoStyles: [PhotoStyle]  // What their photos conveyed
+    var bioKeywords: [String]      // Key themes from bio
+    var interests: [String]
+
+    enum CodingKeys: String, CodingKey {
+        case age
+        case gender
+        case heightInches = "height_inches"
+        case occupation
+        case education
+        case ethnicity
+        case hasChildren = "has_children"
+        case wantsChildren = "wants_children"
+        case religion
+        case neighborhoods
+        case photoStyles = "photo_styles"
+        case bioKeywords = "bio_keywords"
+        case interests
+    }
+}
+
+enum PhotoStyle: String, Codable, CaseIterable {
+    case outdoorsy
+    case urban
+    case artistic
+    case sporty
+    case casual
+    case dressy
+    case adventurous
+    case homebody
+    case social
+    case intimate
+}
+
+// MARK: - Preference Pattern (What Jules has learned from signals)
+struct PreferencePattern: Codable, Identifiable, Equatable {
+    let id: String
+    let userId: String
+    var category: PreferenceCategory
+    var attribute: String           // e.g., "occupation", "height_range", "ethnicity"
+    var value: String               // e.g., "creative_fields", "5'8-6'2", "asian"
+    var yesCount: Int               // Times user said yes to this
+    var noCount: Int                // Times user said no to this
+    var totalExposures: Int         // Total times shown
+    var acceptanceRate: Double      // yesCount / totalExposures
+    var strength: PatternStrength   // How confident Jules is
+    var lastUpdated: Date
+    var notes: String?              // Jules's observations
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case category
+        case attribute
+        case value
+        case yesCount = "yes_count"
+        case noCount = "no_count"
+        case totalExposures = "total_exposures"
+        case acceptanceRate = "acceptance_rate"
+        case strength
+        case lastUpdated = "last_updated"
+        case notes
+    }
+}
+
+enum PreferenceCategory: String, Codable, CaseIterable {
+    case physical           // Height, body type, style
+    case demographics       // Age, ethnicity, religion
+    case lifestyle          // Kids, career type, education
+    case personality        // Interests, communication style
+    case logistics          // Neighborhoods, availability
+}
+
+enum PatternStrength: String, Codable {
+    case emerging           // < 5 data points
+    case developing         // 5-15 data points
+    case established        // 15-30 data points
+    case strong             // 30+ data points, clear pattern
+}
+
+// MARK: - User Taste Profile (Comprehensive understanding)
+struct UserTasteProfile: Codable, Identifiable, Equatable {
+    let id: String
+    let userId: String
+
+    // Physical preferences (learned from behavior)
+    var heightPreference: HeightPreference?
+    var bodyTypePatterns: [String: Double]      // bodyType -> acceptance rate
+    var stylePreferences: [PhotoStyle: Double]  // style -> acceptance rate
+
+    // Demographic patterns
+    var agePatternMin: Int?
+    var agePatternMax: Int?
+    var ethnicityPatterns: [String: Double]
+    var religionPatterns: [String: Double]
+
+    // Lifestyle patterns
+    var occupationPatterns: [String: Double]    // e.g., "creative": 0.8, "finance": 0.3
+    var educationPatterns: [String: Double]
+    var kidsPreferenceObserved: ChildrenPreference?
+
+    // Personality/interest patterns
+    var interestAffinities: [String: Double]    // Which interests correlate with yes
+    var bioKeywordAffinities: [String: Double]  // What words in bios work
+
+    // Meta patterns
+    var decidesQuicklyOn: [String]              // Attributes where they decide fast
+    var needsTimeOn: [String]                   // Attributes where they deliberate
+    var dealbreakers: [String]                  // Hard no patterns
+    var superAttractions: [String]              // Instant yes patterns
+
+    // Exploration tracking
+    var lastExploratoryMatch: Date?             // When did we try something different?
+    var exploratorySuccessRate: Double          // How often do "outside type" matches work?
+
+    var updatedAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case heightPreference = "height_preference"
+        case bodyTypePatterns = "body_type_patterns"
+        case stylePreferences = "style_preferences"
+        case agePatternMin = "age_pattern_min"
+        case agePatternMax = "age_pattern_max"
+        case ethnicityPatterns = "ethnicity_patterns"
+        case religionPatterns = "religion_patterns"
+        case occupationPatterns = "occupation_patterns"
+        case educationPatterns = "education_patterns"
+        case kidsPreferenceObserved = "kids_preference_observed"
+        case interestAffinities = "interest_affinities"
+        case bioKeywordAffinities = "bio_keyword_affinities"
+        case decidesQuicklyOn = "decides_quickly_on"
+        case needsTimeOn = "needs_time_on"
+        case dealbreakers
+        case superAttractions = "super_attractions"
+        case lastExploratoryMatch = "last_exploratory_match"
+        case exploratorySuccessRate = "exploratory_success_rate"
+        case updatedAt = "updated_at"
+    }
+}
+
+struct HeightPreference: Codable, Equatable {
+    var minInches: Int?
+    var maxInches: Int?
+    var idealRangeMin: Int?
+    var idealRangeMax: Int?
+    var flexibility: Double  // 0-1, how strict they are
+}
+
+// MARK: - Exploratory Match Flag
+struct ExploratoryMatch: Codable, Identifiable, Equatable {
+    let id: String
+    let matchId: String
+    var hypothesis: String          // "Testing if they like creative types"
+    var differingAttributes: [String]  // What's different from their pattern
+    var outcome: ExploratoryOutcome?
+    var createdAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case matchId = "match_id"
+        case hypothesis
+        case differingAttributes = "differing_attributes"
+        case outcome
+        case createdAt = "created_at"
+    }
+}
+
+enum ExploratoryOutcome: String, Codable {
+    case accepted           // They said yes - update patterns!
+    case declined           // Confirmed existing pattern
+    case superLiked         // Major pattern update needed
+    case secondDate         // Strong signal to expand type
+}

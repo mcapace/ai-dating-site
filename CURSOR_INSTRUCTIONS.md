@@ -125,7 +125,111 @@ CREATE POLICY "Users can update own tokens" ON user_tokens
 ALTER TABLE priority_pass_usage ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view own pass usage" ON priority_pass_usage
     FOR SELECT USING (auth.uid() = from_user_id OR auth.uid() = to_user_id);
+
+-- Preference Learning: Every yes/no teaches Jules
+CREATE TABLE match_signals (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    match_user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    action TEXT NOT NULL, -- accepted, declined, expired, super_liked, second_date, no_second_date
+    match_profile JSONB NOT NULL, -- snapshot of profile at decision time
+    time_to_decide INT, -- seconds (quick yes = strong interest)
+    asked_jules_first BOOLEAN DEFAULT FALSE,
+    priority_pass_used BOOLEAN DEFAULT FALSE,
+    source TEXT NOT NULL, -- match_presentation, spark_exchange, post_date, conversation
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Aggregated patterns Jules has learned
+CREATE TABLE preference_patterns (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    category TEXT NOT NULL, -- physical, demographics, lifestyle, personality, logistics
+    attribute TEXT NOT NULL, -- occupation_type, height_range, ethnicity, etc.
+    value TEXT NOT NULL,
+    yes_count INT DEFAULT 0,
+    no_count INT DEFAULT 0,
+    total_exposures INT DEFAULT 0,
+    acceptance_rate DOUBLE PRECISION DEFAULT 0,
+    strength TEXT DEFAULT 'emerging', -- emerging, developing, established, strong
+    last_updated TIMESTAMPTZ DEFAULT NOW(),
+    notes TEXT,
+    UNIQUE(user_id, attribute, value)
+);
+
+-- Comprehensive taste profile per user
+CREATE TABLE taste_profiles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE UNIQUE,
+    height_preference JSONB,
+    body_type_patterns JSONB DEFAULT '{}',
+    style_preferences JSONB DEFAULT '{}',
+    age_pattern_min INT,
+    age_pattern_max INT,
+    ethnicity_patterns JSONB DEFAULT '{}',
+    religion_patterns JSONB DEFAULT '{}',
+    occupation_patterns JSONB DEFAULT '{}',
+    education_patterns JSONB DEFAULT '{}',
+    kids_preference_observed TEXT,
+    interest_affinities JSONB DEFAULT '{}',
+    bio_keyword_affinities JSONB DEFAULT '{}',
+    decides_quickly_on TEXT[] DEFAULT '{}',
+    needs_time_on TEXT[] DEFAULT '{}',
+    dealbreakers TEXT[] DEFAULT '{}',
+    super_attractions TEXT[] DEFAULT '{}',
+    last_exploratory_match TIMESTAMPTZ,
+    exploratory_success_rate DOUBLE PRECISION DEFAULT 0,
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Track exploratory matches (testing outside their type)
+CREATE TABLE exploratory_matches (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    match_id UUID REFERENCES matches(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    hypothesis TEXT NOT NULL,
+    differing_attributes TEXT[] DEFAULT '{}',
+    outcome TEXT, -- accepted, declined, super_liked, second_date
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- RLS for preference learning
+ALTER TABLE match_signals ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users view own signals" ON match_signals FOR SELECT USING (auth.uid() = user_id);
+
+ALTER TABLE preference_patterns ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users view own patterns" ON preference_patterns FOR SELECT USING (auth.uid() = user_id);
+
+ALTER TABLE taste_profiles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users view own taste profile" ON taste_profiles FOR SELECT USING (auth.uid() = user_id);
+
+-- Indexes for fast pattern lookup
+CREATE INDEX idx_match_signals_user ON match_signals(user_id, created_at DESC);
+CREATE INDEX idx_preference_patterns_user ON preference_patterns(user_id, attribute);
+CREATE INDEX idx_preference_patterns_strength ON preference_patterns(user_id, strength, acceptance_rate DESC);
 ```
+
+## Preference Learning Philosophy
+
+Jules learns from BEHAVIOR, not just stated preferences:
+
+### What Jules Tracks
+- **Every yes/no**: Who they accept, pass on, let expire
+- **Decision speed**: Quick yes = strong interest, hesitation = uncertainty
+- **Post-date outcomes**: Did they want a second date?
+- **Patterns across dimensions**: occupation types, height ranges, styles, interests
+
+### How Jules Uses Patterns
+- **Strong patterns (30+ signals)**: Weight matches heavily toward these
+- **Dealbreakers (< 10% acceptance)**: Almost never show these
+- **Super attractions (> 90% acceptance)**: Prioritize these
+- **Exploratory matches**: Occasionally test outside patterns to expand horizons
+
+### Exploratory Matching
+Jules doesn't just match what users say they want. Sometimes the best match is someone unexpected:
+- If user has been saying no a lot → try something different
+- If exploratory matches have worked before → do more
+- ~20% of matches can be exploratory to keep things fresh
 
 ## Match Delivery System
 
