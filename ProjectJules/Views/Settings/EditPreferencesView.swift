@@ -14,25 +14,17 @@ struct EditPreferencesView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: Spacing.lg) {
+                VStack(spacing: JulesSpacing.lg) {
                     // Gender Preference
                     SectionCard(title: "I'm interested in") {
-                        VStack(spacing: Spacing.sm) {
-                            ForEach(["Women", "Men", "Non-binary", "Everyone"], id: \.self) { gender in
-                                Button(action: {
+                        VStack(spacing: JulesSpacing.sm) {
+                            ForEach(Gender.allCases, id: \.self) { gender in
+                                JulesSelectionButton(
+                                    title: gender.displayName,
+                                    isSelected: viewModel.interestedIn.contains(gender),
+                                    style: .multi
+                                ) {
                                     viewModel.toggleGenderPreference(gender)
-                                }) {
-                                    HStack {
-                                        Text(gender)
-                                            .font(.julBody())
-                                            .foregroundColor(.julTextPrimary)
-                                        Spacer()
-                                        Image(systemName: viewModel.interestedIn.contains(gender) ? "checkmark.circle.fill" : "circle")
-                                            .foregroundColor(viewModel.interestedIn.contains(gender) ? .julTerracotta : .julTextSecondary)
-                                    }
-                                    .padding(Spacing.md)
-                                    .background(Color.julCardBackground)
-                                    .cornerRadius(Radius.md)
                                 }
                             }
                         }
@@ -40,7 +32,7 @@ struct EditPreferencesView: View {
 
                     // Age Range
                     SectionCard(title: "Age range") {
-                        VStack(spacing: Spacing.md) {
+                        VStack(spacing: JulesSpacing.md) {
                             AgeRangeSelector(
                                 minAge: $viewModel.minAge,
                                 maxAge: $viewModel.maxAge
@@ -49,19 +41,19 @@ struct EditPreferencesView: View {
                             // Display values
                             HStack {
                                 Text("\(viewModel.minAge)")
-                                    .font(.julBody())
-                                    .foregroundColor(.julTextPrimary)
+                                    .font(.julBody)
+                                    .foregroundColor(.julWarmBlack)
                                 Spacer()
                                 Text("\(viewModel.maxAge)")
-                                    .font(.julBody())
-                                    .foregroundColor(.julTextPrimary)
+                                    .font(.julBody)
+                                    .foregroundColor(.julWarmBlack)
                             }
                         }
                     }
 
                     // Height Preference
                     SectionCard(title: "Height preference") {
-                        VStack(spacing: Spacing.md) {
+                        VStack(spacing: JulesSpacing.md) {
                             HeightRangeSelector(
                                 minHeight: $viewModel.minHeight,
                                 maxHeight: $viewModel.maxHeight
@@ -69,66 +61,42 @@ struct EditPreferencesView: View {
 
                             HStack {
                                 Text(formatHeight(viewModel.minHeight))
-                                    .font(.julBody())
-                                    .foregroundColor(.julTextPrimary)
+                                    .font(.julBody)
+                                    .foregroundColor(.julWarmBlack)
                                 Spacer()
                                 Text(formatHeight(viewModel.maxHeight))
-                                    .font(.julBody())
-                                    .foregroundColor(.julTextPrimary)
+                                    .font(.julBody)
+                                    .foregroundColor(.julWarmBlack)
                             }
                         }
                     }
 
                     // Children Preference
                     SectionCard(title: "Children") {
-                        VStack(spacing: Spacing.sm) {
-                            Button(action: {
+                        VStack(spacing: JulesSpacing.sm) {
+                            JulesSelectionButton(
+                                title: "Has children",
+                                subtitle: "Open to partners with children",
+                                isSelected: viewModel.openToHasChildren,
+                                style: .multi
+                            ) {
                                 viewModel.openToHasChildren.toggle()
-                            }) {
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text("Has children")
-                                            .font(.julBody())
-                                            .foregroundColor(.julTextPrimary)
-                                        Text("Open to partners with children")
-                                            .font(.julLabelSmall())
-                                            .foregroundColor(.julTextSecondary)
-                                    }
-                                    Spacer()
-                                    Image(systemName: viewModel.openToHasChildren ? "checkmark.circle.fill" : "circle")
-                                        .foregroundColor(viewModel.openToHasChildren ? .julTerracotta : .julTextSecondary)
-                                }
-                                .padding(Spacing.md)
-                                .background(Color.julCardBackground)
-                                .cornerRadius(Radius.md)
                             }
 
-                            Button(action: {
+                            JulesSelectionButton(
+                                title: "Wants children",
+                                subtitle: "Open to partners who want children",
+                                isSelected: viewModel.openToWantsChildren,
+                                style: .multi
+                            ) {
                                 viewModel.openToWantsChildren.toggle()
-                            }) {
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text("Wants children")
-                                            .font(.julBody())
-                                            .foregroundColor(.julTextPrimary)
-                                        Text("Open to partners who want children")
-                                            .font(.julLabelSmall())
-                                            .foregroundColor(.julTextSecondary)
-                                    }
-                                    Spacer()
-                                    Image(systemName: viewModel.openToWantsChildren ? "checkmark.circle.fill" : "circle")
-                                        .foregroundColor(viewModel.openToWantsChildren ? .julTerracotta : .julTextSecondary)
-                                }
-                                .padding(Spacing.md)
-                                .background(Color.julCardBackground)
-                                .cornerRadius(Radius.md)
                             }
                         }
                     }
 
                     // Distance
                     SectionCard(title: "Distance") {
-                        VStack(spacing: Spacing.md) {
+                        VStack(spacing: JulesSpacing.md) {
                             Slider(
                                 value: $viewModel.maxDistance,
                                 in: 1...50,
@@ -137,17 +105,17 @@ struct EditPreferencesView: View {
                             .tint(.julTerracotta)
 
                             Text("Within \(Int(viewModel.maxDistance)) miles")
-                                .font(.julBody())
-                                .foregroundColor(.julTextSecondary)
+                                .font(.julBody)
+                                .foregroundColor(.julWarmGray)
                         }
                     }
 
                     // Dealbreakers
                     SectionCard(title: "Dealbreakers") {
-                        VStack(alignment: .leading, spacing: Spacing.sm) {
+                        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
                             Text("These are non-negotiables for you")
-                                .font(.julLabelSmall())
-                                .foregroundColor(.julTextSecondary)
+                                .font(.julCaption)
+                                .foregroundColor(.julWarmGray)
 
                             ForEach(viewModel.availableDealbreakers, id: \.self) { dealbreaker in
                                 DealbreakerToggle(
@@ -160,8 +128,8 @@ struct EditPreferencesView: View {
                         }
                     }
                 }
-                .padding(.horizontal, Spacing.lg)
-                .padding(.vertical, Spacing.md)
+                .padding(.horizontal, JulesSpacing.screen)
+                .padding(.vertical, JulesSpacing.md)
             }
             .background(Color.julCream)
             .navigationTitle("Who I'm Looking For")
@@ -169,7 +137,7 @@ struct EditPreferencesView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") { dismiss() }
-                        .foregroundColor(.julTextSecondary)
+                        .foregroundColor(.julWarmGray)
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -179,7 +147,7 @@ struct EditPreferencesView: View {
                             dismiss()
                         }
                     }
-                    .font(.julButton())
+                    .font(.julButton)
                     .foregroundColor(.julTerracotta)
                 }
             }
@@ -203,7 +171,7 @@ struct AgeRangeSelector: View {
             ZStack(alignment: .leading) {
                 // Track
                 Rectangle()
-                    .fill(Color.julBorder)
+                    .fill(Color.julDivider)
                     .frame(height: 4)
 
                 // Selected range
@@ -261,7 +229,7 @@ struct HeightRangeSelector: View {
             ZStack(alignment: .leading) {
                 // Track
                 Rectangle()
-                    .fill(Color.julBorder)
+                    .fill(Color.julDivider)
                     .frame(height: 4)
 
                 // Selected range
@@ -318,16 +286,16 @@ struct DealbreakerToggle: View {
         Button(action: action) {
             HStack {
                 Text(title)
-                    .font(.julBody())
-                    .foregroundColor(.julTextPrimary)
+                    .font(.julBody)
+                    .foregroundColor(.julWarmBlack)
 
                 Spacer()
 
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundColor(isSelected ? .julTerracotta : .julTextSecondary)
+                    .foregroundColor(isSelected ? .julTerracotta : .julWarmGray)
             }
-            .padding(Spacing.sm)
+            .padding(JulesSpacing.sm)
         }
     }
 }
@@ -335,7 +303,7 @@ struct DealbreakerToggle: View {
 // MARK: - View Model
 @MainActor
 class EditPreferencesViewModel: ObservableObject {
-    @Published var interestedIn: Set<String> = []
+    @Published var interestedIn: Set<Gender> = []
     @Published var minAge = 25
     @Published var maxAge = 45
     @Published var minHeight = 60  // 5'0"
@@ -361,10 +329,10 @@ class EditPreferencesViewModel: ObservableObject {
 
     private func loadPreferences() {
         // TODO: Load from UserService
-        interestedIn = ["Women"]
+        interestedIn = [.woman]
     }
 
-    func toggleGenderPreference(_ gender: String) {
+    func toggleGenderPreference(_ gender: Gender) {
         if interestedIn.contains(gender) {
             interestedIn.remove(gender)
         } else {

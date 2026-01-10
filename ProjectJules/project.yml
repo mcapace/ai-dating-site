@@ -1,10 +1,15 @@
 name: ProjectJules
 options:
-  bundleIdPrefix: com.projectjules
+  bundleIdPrefix: com.jules
   deploymentTarget:
     iOS: "17.0"
   developmentLanguage: en
   xcodeVersion: "15.0"
+
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: 2.0.0
 
 targets:
   ProjectJules:
@@ -13,20 +18,32 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: App
+      - path: Config
       - path: DesignSystem
       - path: Models
       - path: Services
       - path: Views
-      - path: Config
     resources:
       - path: Assets
         type: folder
+      - path: Fonts/PlayfairDisplay-Regular.ttf
+      - path: Fonts/PlayfairDisplay-SemiBold.ttf
+      - path: Fonts/Inter-Regular.ttf
+      - path: Fonts/Inter-Medium.ttf
+      - path: Fonts/Inter-SemiBold.ttf
     info:
       path: Info.plist
       properties:
-        UIApplicationSceneManifest:
-          UIApplicationSupportsMultipleScenes: true
-        UILaunchScreen: {}
+        CFBundleDevelopmentRegion: en
+        CFBundleDisplayName: Jules
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleInfoDictionaryVersion: "6.0"
+        CFBundleName: $(PRODUCT_NAME)
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        LSRequiresIPhoneOS: true
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationLandscapeLeft
@@ -36,33 +53,44 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UILaunchScreen: {}
         UIAppFonts:
           - PlayfairDisplay-Regular.ttf
           - PlayfairDisplay-SemiBold.ttf
           - Inter-Regular.ttf
           - Inter-Medium.ttf
           - Inter-SemiBold.ttf
-        NSPhotoLibraryUsageDescription: "Jules needs access to your photos to set up your profile."
-        NSCameraUsageDescription: "Jules needs access to your camera to take profile photos."
-        NSLocationWhenInUseUsageDescription: "Jules uses your location to find matches and suggest nearby venues."
-        NSMicrophoneUsageDescription: "Jules needs access to your microphone to record voice notes."
     dependencies:
-      - package: supabase-swift
+      - package: Supabase
         product: Supabase
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.projectjules.ProjectJules
-        PRODUCT_NAME: ProjectJules
-        SWIFT_VERSION: "5.9"
-        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+        PRODUCT_BUNDLE_IDENTIFIER: com.jules.ProjectJules
         CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: ""
+        INFOPLIST_FILE: Info.plist
+        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+        SWIFT_VERSION: "5.9"
+        TARGETED_DEVICE_FAMILY: "1,2"
       configs:
         Debug:
           DEVELOPMENT_TEAM: ""
         Release:
           DEVELOPMENT_TEAM: ""
-packages:
-  supabase-swift:
-    url: https://github.com/supabase/supabase-swift
-    from: "2.0.0"
-
+    schemes:
+      ProjectJules:
+        build:
+          targets:
+            ProjectJules: all
+        run:
+          config: Debug
+        test:
+          config: Debug
+        profile:
+          config: Release
+        analyze:
+          config: Debug
+        archive:
+          config: Release

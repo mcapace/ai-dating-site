@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Jules</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,19 +15,13 @@
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
-	<string>APPL</string>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Jules needs access to your camera to take profile photos.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Jules uses your location to find matches and suggest nearby venues.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Jules needs access to your microphone to record voice notes.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Jules needs access to your photos to set up your profile.</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>PlayfairDisplay-Regular.ttf</string>
@@ -34,13 +30,13 @@
 		<string>Inter-Medium.ttf</string>
 		<string>Inter-SemiBold.ttf</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict/>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
-		<true/>
+		<false/>
 	</dict>
-	<key>UILaunchScreen</key>
-	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

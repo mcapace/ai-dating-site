@@ -28,12 +28,12 @@ struct MatchProfileView: View {
                     )
 
                     // Profile Content
-                    VStack(spacing: Spacing.lg) {
+                    VStack(spacing: JulesSpacing.lg) {
                         // Name & Basic Info
                         ProfileHeader(
                             name: viewModel.profile?.firstName ?? "",
                             age: viewModel.profile?.age ?? 0,
-                            location: "New York City",
+                            location: viewModel.location,
                             occupation: viewModel.profile?.occupation ?? ""
                         )
 
@@ -65,8 +65,8 @@ struct MatchProfileView: View {
                             DealbreakerSection(dealbreakers: viewModel.dealbreakers)
                         }
                     }
-                    .padding(.horizontal, Spacing.lg)
-                    .padding(.top, Spacing.lg)
+                    .padding(.horizontal, JulesSpacing.screen)
+                    .padding(.top, JulesSpacing.lg)
                     .padding(.bottom, 100) // Space for action buttons
                 }
             }
@@ -115,19 +115,19 @@ struct PhotoGallery: View {
                                 .aspectRatio(contentMode: .fill)
                         case .failure:
                             Rectangle()
-                                .fill(Color.julCream)
+                                .fill(Color.julInputBackground)
                                 .overlay(
                                     Image(systemName: "photo")
                                         .font(.system(size: 40))
-                                        .foregroundColor(.julTextSecondary)
+                                        .foregroundColor(.julWarmGray)
                                 )
                         case .empty:
                             Rectangle()
-                                .fill(Color.julCream)
+                                .fill(Color.julInputBackground)
                                 .overlay(ProgressView())
                         @unknown default:
                             Rectangle()
-                                .fill(Color.julCream)
+                                .fill(Color.julInputBackground)
                         }
                     }
                     .tag(index)
@@ -145,7 +145,7 @@ struct PhotoGallery: View {
                         .animation(.easeInOut(duration: 0.2), value: currentIndex)
                 }
             }
-            .padding(.bottom, Spacing.md)
+            .padding(.bottom, JulesSpacing.md)
         }
     }
 }
@@ -158,18 +158,18 @@ struct ProfileHeader: View {
     let occupation: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.xs) {
+        VStack(alignment: .leading, spacing: JulesSpacing.xs) {
             Text("\(name), \(age)")
-                .font(.julHeadline1())
-                .foregroundColor(.julTextPrimary)
+                .font(.julHero)
+                .foregroundColor(.julWarmBlack)
 
-            HStack(spacing: Spacing.sm) {
+            HStack(spacing: JulesSpacing.sm) {
                 Label(location, systemImage: "mappin")
                 Text("·")
                 Text(occupation)
             }
-            .font(.julBody())
-            .foregroundColor(.julTextSecondary)
+            .font(.julBody)
+            .foregroundColor(.julWarmGray)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -180,15 +180,9 @@ struct ProfileTags: View {
     let tags: [String]
 
     var body: some View {
-        FlowLayout(spacing: Spacing.xs) {
+        FlowLayout(spacing: JulesSpacing.xs) {
             ForEach(tags, id: \.self) { tag in
-                Text(tag)
-                    .font(.julBodySmall())
-                    .foregroundColor(.julTextPrimary)
-                    .padding(.horizontal, Spacing.sm)
-                    .padding(.vertical, Spacing.xs)
-                    .background(Color.julCardBackground)
-                    .clipShape(Capsule())
+                JulesTag(text: tag)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -200,49 +194,24 @@ struct JulesTakeSection: View {
     let content: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            HStack(spacing: Spacing.sm) {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(red: 0.97, green: 0.90, blue: 0.86),
-                                Color(red: 0.90, green: 0.84, blue: 0.78)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 28, height: 28)
-                    .overlay(
-                        Text("J")
-                            .font(.system(size: 14, weight: .semibold, design: .serif))
-                            .foregroundColor(.julTerracotta)
-                    )
+        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
+            HStack(spacing: JulesSpacing.sm) {
+                JulesAvatar(size: 28)
 
                 Text("Jules' Take")
-                    .font(.julHeadline3())
-                    .foregroundColor(.julTextPrimary)
+                    .font(.julTitle3)
+                    .foregroundColor(.julWarmBlack)
             }
 
             Text(content)
-                .font(.julBody())
-                .foregroundColor(.julTextPrimary)
+                .font(.julBody)
+                .foregroundColor(.julWarmBlack)
                 .lineSpacing(4)
         }
-        .padding(Spacing.md)
+        .padding(JulesSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            LinearGradient(
-                colors: [
-                    Color(red: 0.98, green: 0.94, blue: 0.90),
-                    Color(red: 0.96, green: 0.90, blue: 0.84)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
-        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+        .background(LinearGradient.julSparkGradient)
+        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
     }
 }
 
@@ -251,14 +220,14 @@ struct AboutSection: View {
     let bio: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
+        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
             Text("About")
-                .font(.julHeadline3())
-                .foregroundColor(.julTextPrimary)
+                .font(.julTitle3)
+                .foregroundColor(.julWarmBlack)
 
             Text(bio)
-                .font(.julBody())
-                .foregroundColor(.julTextPrimary)
+                .font(.julBody)
+                .foregroundColor(.julWarmBlack)
                 .lineSpacing(4)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -270,24 +239,36 @@ struct ProfileDetailsGrid: View {
     let profile: UserProfile?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
+        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
             Text("Details")
-                .font(.julHeadline3())
-                .foregroundColor(.julTextPrimary)
+                .font(.julTitle3)
+                .foregroundColor(.julWarmBlack)
 
             LazyVGrid(
                 columns: [
                     GridItem(.flexible()),
                     GridItem(.flexible())
                 ],
-                spacing: Spacing.sm
+                spacing: JulesSpacing.sm
             ) {
                 if let height = profile?.heightInches {
                     DetailItem(icon: "ruler", label: "Height", value: formatHeight(height))
                 }
 
-                if let education = profile?.education {
-                    DetailItem(icon: "graduationcap", label: "Education", value: education)
+                if let children = profile?.hasChildren {
+                    DetailItem(icon: "figure.2.and.child.holdinghands", label: "Children", value: children ? "Has children" : "No children")
+                }
+
+                if let ethnicity = profile?.ethnicity {
+                    DetailItem(icon: "globe", label: "Ethnicity", value: ethnicity)
+                }
+
+                if let religion = profile?.religion {
+                    DetailItem(icon: "sparkles", label: "Religion", value: religion)
+                }
+
+                if let wantsChildren = profile?.wantsChildren {
+                    DetailItem(icon: "heart", label: "Wants kids", value: wantsChildren.displayValue)
                 }
             }
         }
@@ -307,7 +288,7 @@ struct DetailItem: View {
     let value: String
 
     var body: some View {
-        HStack(spacing: Spacing.sm) {
+        HStack(spacing: JulesSpacing.sm) {
             Image(systemName: icon)
                 .font(.system(size: 16))
                 .foregroundColor(.julTerracotta)
@@ -315,19 +296,19 @@ struct DetailItem: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(label)
-                    .font(.julLabelSmall())
-                    .foregroundColor(.julTextSecondary)
+                    .font(.julCaption)
+                    .foregroundColor(.julWarmGray)
 
                 Text(value)
-                    .font(.julBody())
-                    .foregroundColor(.julTextPrimary)
+                    .font(.julBody)
+                    .foregroundColor(.julWarmBlack)
             }
 
             Spacer()
         }
-        .padding(Spacing.sm)
-        .background(Color.julCardBackground)
-        .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+        .padding(JulesSpacing.sm)
+        .background(Color.julCard)
+        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.small))
     }
 }
 
@@ -336,26 +317,26 @@ struct LookingForSection: View {
     let text: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
+        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
             HStack(spacing: 6) {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 14))
                     .foregroundColor(.julSage)
 
                 Text("Looking for")
-                    .font(.julHeadline3())
-                    .foregroundColor(.julTextPrimary)
+                    .font(.julTitle3)
+                    .foregroundColor(.julWarmBlack)
             }
 
             Text(text)
-                .font(.julBody())
-                .foregroundColor(.julTextPrimary)
+                .font(.julBody)
+                .foregroundColor(.julWarmBlack)
                 .lineSpacing(4)
         }
-        .padding(Spacing.md)
+        .padding(JulesSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.julSage.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
     }
 }
 
@@ -364,23 +345,23 @@ struct DealbreakerSection: View {
     let dealbreakers: [String]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
+        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
             Text("Important to them")
-                .font(.julLabelSmall())
-                .foregroundColor(.julTextSecondary)
+                .font(.julCaption)
+                .foregroundColor(.julWarmGray)
 
-            FlowLayout(spacing: Spacing.xs) {
+            FlowLayout(spacing: JulesSpacing.xs) {
                 ForEach(dealbreakers, id: \.self) { item in
                     HStack(spacing: 4) {
                         Image(systemName: "checkmark")
                             .font(.system(size: 10, weight: .bold))
                         Text(item)
-                            .font(.julLabelSmall())
+                            .font(.julCaption)
                     }
-                    .foregroundColor(.julTextSecondary)
-                    .padding(.horizontal, Spacing.sm)
-                    .padding(.vertical, Spacing.xs)
-                    .background(Color.julBorder)
+                    .foregroundColor(.julWarmGray)
+                    .padding(.horizontal, JulesSpacing.sm)
+                    .padding(.vertical, JulesSpacing.xs)
+                    .background(Color.julDivider)
                     .clipShape(Capsule())
                 }
             }
@@ -395,14 +376,14 @@ struct ProfileActionBar: View {
     let onAccept: () -> Void
 
     var body: some View {
-        HStack(spacing: Spacing.lg) {
+        HStack(spacing: JulesSpacing.lg) {
             // Decline
             Button(action: onDecline) {
                 Image(systemName: "xmark")
                     .font(.system(size: 24, weight: .medium))
-                    .foregroundColor(.julTextSecondary)
+                    .foregroundColor(.julWarmGray)
                     .frame(width: 64, height: 64)
-                    .background(Color.julCardBackground)
+                    .background(Color.julCard)
                     .clipShape(Circle())
                     .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 4)
             }
@@ -424,8 +405,8 @@ struct ProfileActionBar: View {
                     .shadow(color: Color.julTerracotta.opacity(0.4), radius: 12, x: 0, y: 6)
             }
         }
-        .padding(.vertical, Spacing.lg)
-        .padding(.horizontal, Spacing.xl)
+        .padding(.vertical, JulesSpacing.lg)
+        .padding(.horizontal, JulesSpacing.xl)
         .background(
             LinearGradient(
                 colors: [Color.julCream.opacity(0), Color.julCream],
@@ -449,6 +430,7 @@ class MatchProfileViewModel: ObservableObject {
     @Published var julesTake: String?
     @Published var lookingFor: String?
     @Published var dealbreakers: [String] = []
+    @Published var location: String = ""
     @Published var showActions = true
     @Published var isLoading = false
 
@@ -460,16 +442,19 @@ class MatchProfileViewModel: ObservableObject {
     private func loadProfile() {
         // Mock data for preview
         profile = UserProfile(
-            id: UUID(),
-            userId: UUID(),
+            id: matchId,
+            userId: matchId,
             firstName: "Sarah",
-            lastName: nil,
-            dateOfBirth: Calendar.current.date(byAdding: .year, value: -28, to: Date()),
-            bio: "I spend my weekends exploring coffee shops, taking photos of interesting architecture, and pretending I'll finish that book I started three months ago. Looking for someone who appreciates a good playlist and doesn't mind my plant obsession.",
-            gender: "Woman",
-            occupation: "Product Designer",
-            education: "Bachelor's Degree",
+            birthdate: Calendar.current.date(byAdding: .year, value: -28, to: Date())!,
+            gender: .woman,
             heightInches: 66,
+            hasChildren: false,
+            wantsChildren: .someday,
+            occupation: "Product Designer",
+            education: nil,
+            religion: "Spiritual",
+            ethnicity: "Mixed",
+            bio: "I spend my weekends exploring coffee shops, taking photos of interesting architecture, and pretending I'll finish that book I started three months ago. Looking for someone who appreciates a good playlist and doesn't mind my plant obsession.",
             createdAt: Date(),
             updatedAt: Date()
         )
@@ -481,6 +466,8 @@ class MatchProfileViewModel: ObservableObject {
         ]
 
         tags = ["5'6\"", "No kids", "Designer", "Yoga", "Coffee addict"]
+        
+        location = "West Village, NYC"  // TODO: Fetch from user neighborhoods
 
         julesTake = "You both said dive bars over cocktail bars, and she hates small talk as much as you do. Plus, you're both into architecture and have an unhealthy relationship with your plant collections."
 

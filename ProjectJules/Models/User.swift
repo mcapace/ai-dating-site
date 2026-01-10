@@ -2,146 +2,309 @@
 //  User.swift
 //  ProjectJules
 //
-//  User model and preferences
+//  Core Data Models: User & Profile
 //
 
 import Foundation
 
-struct User: Identifiable, Codable {
-    let id: UUID
-    let phone: String
+// MARK: - User
+struct User: Codable, Identifiable, Equatable {
+    let id: String
+    var phone: String
+    var email: String?
+    var createdAt: Date
+    var updatedAt: Date
+    var lastActiveAt: Date?
     var status: UserStatus
     var subscriptionTier: SubscriptionTier
     var subscriptionExpiresAt: Date?
-    let createdAt: Date
-    var updatedAt: Date
-    
-    var profile: UserProfile?
-    var preferences: UserPreferences?
-    
-    enum UserStatus: String, Codable {
-        case onboarding
-        case active
-        case paused
-        case banned
+
+    var hasCompletedOnboarding: Bool {
+        status == .active
     }
-    
-    enum SubscriptionTier: String, Codable {
-        case free
-        case premium
+
+    var isPremium: Bool {
+        subscriptionTier == .premium &&
+        (subscriptionExpiresAt ?? Date.distantPast) > Date()
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case phone
+        case email
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case lastActiveAt = "last_active_at"
+        case status
+        case subscriptionTier = "subscription_tier"
+        case subscriptionExpiresAt = "subscription_expires_at"
     }
 }
 
-struct UserProfile: Identifiable, Codable {
-    let id: UUID
-    let userId: UUID
-    var firstName: String?
-    var lastName: String?
-    var dateOfBirth: Date?
-    var bio: String?
-    var gender: String?
+enum UserStatus: String, Codable {
+    case onboarding
+    case active
+    case paused
+    case banned
+}
+
+enum SubscriptionTier: String, Codable {
+    case free
+    case premium
+    
+    var displayName: String {
+        switch self {
+        case .free: return "Free"
+        case .premium: return "Premium"
+        }
+    }
+}
+
+// MARK: - User Profile
+struct UserProfile: Codable, Identifiable, Equatable {
+    let id: String
+    let userId: String
+    var firstName: String
+    var birthdate: Date
+    var gender: Gender
+    var heightInches: Int?
+    var hasChildren: Bool?
+    var wantsChildren: WantsChildren?
     var occupation: String?
     var education: String?
-    var heightInches: Int?
-    let createdAt: Date
+    var religion: String?
+    var ethnicity: String?
+    var bio: String?
+    var createdAt: Date
     var updatedAt: Date
-    
-    var fullName: String {
-        [firstName, lastName].compactMap { $0 }.joined(separator: " ")
+
+    var age: Int {
+        Calendar.current.dateComponents([.year], from: birthdate, to: Date()).year ?? 0
     }
-    
-    var age: Int? {
-        guard let dob = dateOfBirth else { return nil }
-        let calendar = Calendar.current
-        let ageComponents = calendar.dateComponents([.year], from: dob, to: Date())
-        return ageComponents.year
+
+    var heightFormatted: String? {
+        guard let inches = heightInches else { return nil }
+        let feet = inches / 12
+        let remainingInches = inches % 12
+        return "\(feet)'\(remainingInches)\""
+    }
+
+    // Note: primaryPhotoURL should be fetched separately from photos table
+    // This is a placeholder for UI convenience
+    var primaryPhotoURL: String? { nil }
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case firstName = "first_name"
+        case birthdate
+        case gender
+        case heightInches = "height_inches"
+        case hasChildren = "has_children"
+        case wantsChildren = "wants_children"
+        case occupation
+        case education
+        case religion
+        case ethnicity
+        case bio
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
     }
 }
 
-struct UserPreferences: Identifiable, Codable {
-    let id: UUID
-    let userId: UUID
+enum Gender: String, Codable, CaseIterable {
+    case man
+    case woman
+    case nonbinary
+
+    var displayName: String {
+        switch self {
+        case .man: return "Man"
+        case .woman: return "Woman"
+        case .nonbinary: return "Non-binary"
+        }
+    }
+}
+
+enum WantsChildren: String, Codable, CaseIterable {
+    case yes
+    case no
+    case someday
+    case not_sure
+
+    var displayName: String {
+        switch self {
+        case .yes: return "Yes"
+        case .no: return "No"
+        case .someday: return "Someday"
+        case .not_sure: return "Not sure"
+        }
+    }
+
+    var displayValue: String { displayName }
+}
+
+// MARK: - User Photos
+struct UserPhoto: Codable, Identifiable, Equatable {
+    let id: String
+    let userId: String
+    var url: String
+    var position: Int
+    var isPrimary: Bool
+    var createdAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case url
+        case position
+        case isPrimary = "is_primary"
+        case createdAt = "created_at"
+    }
+}
+
+// MARK: - User Preferences
+struct UserPreferences: Codable, Identifiable, Equatable {
+    let id: String
+    let userId: String
+    var genderPreference: [Gender]
     var ageMin: Int
     var ageMax: Int
-    var maxDistance: Int // in miles
-    var genderPreference: [String]
-    var interests: [String]
-    var dealBreakers: [String]
-    let createdAt: Date
+    var heightMinInches: Int?
+    var heightMaxInches: Int?
+    var childrenPreference: ChildrenPreference
+    var distanceMaxMiles: Int?
+    var createdAt: Date
     var updatedAt: Date
-}
 
-struct UserPhoto: Identifiable, Codable {
-    let id: UUID
-    let userId: UUID
-    let url: String
-    let storagePath: String
-    var displayOrder: Int
-    var isPrimary: Bool
-    let createdAt: Date
-}
+    var ageRangeFormatted: String {
+        "\(ageMin) - \(ageMax)"
+    }
 
-// Learning system for improving matches
-struct UserLearning: Identifiable, Codable {
-    let id: UUID
-    let userId: UUID
-    let interactionType: InteractionType
-    let interactionData: [String: AnyCodable]
-    let createdAt: Date
-    
-    enum InteractionType: String, Codable {
-        case swipe
-        case match
-        case date
-        case feedback
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case genderPreference = "gender_preference"
+        case ageMin = "age_min"
+        case ageMax = "age_max"
+        case heightMinInches = "height_min_inches"
+        case heightMaxInches = "height_max_inches"
+        case childrenPreference = "children_preference"
+        case distanceMaxMiles = "distance_max_miles"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
     }
 }
 
-// Helper for Codable with Any
-struct AnyCodable: Codable {
-    let value: Any
-    
-    init(_ value: Any) {
-        self.value = value
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if let bool = try? container.decode(Bool.self) {
-            value = bool
-        } else if let int = try? container.decode(Int.self) {
-            value = int
-        } else if let double = try? container.decode(Double.self) {
-            value = double
-        } else if let string = try? container.decode(String.self) {
-            value = string
-        } else if let array = try? container.decode([AnyCodable].self) {
-            value = array.map { $0.value }
-        } else if let dict = try? container.decode([String: AnyCodable].self) {
-            value = dict.mapValues { $0.value }
-        } else {
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode AnyCodable")
+enum ChildrenPreference: String, Codable {
+    case hasKidsOk = "has_kids_ok"
+    case noKidsOnly = "no_kids_only"
+    case noPreference = "no_pref"
+
+    var displayName: String {
+        switch self {
+        case .hasKidsOk: return "Open to people with kids"
+        case .noKidsOnly: return "Prefer no kids"
+        case .noPreference: return "No preference"
         }
     }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        switch value {
-        case let bool as Bool:
-            try container.encode(bool)
-        case let int as Int:
-            try container.encode(int)
-        case let double as Double:
-            try container.encode(double)
-        case let string as String:
-            try container.encode(string)
-        case let array as [Any]:
-            try container.encode(array.map { AnyCodable($0) })
-        case let dict as [String: Any]:
-            try container.encode(dict.mapValues { AnyCodable($0) })
-        default:
-            throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: container.codingPath, debugDescription: "Cannot encode AnyCodable"))
+}
+
+// MARK: - User Neighborhoods
+struct UserNeighborhood: Codable, Identifiable, Equatable {
+    let id: String
+    let userId: String
+    let neighborhoodId: String
+    var isWeekday: Bool
+    var isWeekend: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case neighborhoodId = "neighborhood_id"
+        case isWeekday = "is_weekday"
+        case isWeekend = "is_weekend"
+    }
+}
+
+// MARK: - Communication Profile (How Jules adapts)
+struct UserCommunicationProfile: Codable, Identifiable, Equatable {
+    let id: String
+    let userId: String
+    var avgMessageLength: Int
+    var toneFormality: Double // 0 = casual, 1 = formal
+    var emojiUsage: EmojiUsage
+    var responseSpeedAvg: Int // seconds
+    var preferredTimes: [String]
+    var julesRelationship: JulesRelationshipStage
+    var updatedAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case avgMessageLength = "avg_message_length"
+        case toneFormality = "tone_formality"
+        case emojiUsage = "emoji_usage"
+        case responseSpeedAvg = "response_speed_avg"
+        case preferredTimes = "preferred_times"
+        case julesRelationship = "jules_relationship"
+        case updatedAt = "updated_at"
+    }
+}
+
+enum EmojiUsage: String, Codable {
+    case none
+    case light
+    case moderate
+    case heavy
+}
+
+enum JulesRelationshipStage: String, Codable {
+    case new
+    case developing
+    case established
+    case trusted
+
+    var description: String {
+        switch self {
+        case .new: return "Just getting to know each other"
+        case .developing: return "Building rapport"
+        case .established: return "Good friends"
+        case .trusted: return "Trusted advisor"
         }
     }
+}
+
+// MARK: - Learned Preferences (What Jules discovers)
+struct LearnedPreference: Codable, Identifiable, Equatable {
+    let id: String
+    let userId: String
+    var preferenceType: PreferenceType
+    var attribute: String
+    var value: String
+    var confidence: Double
+    var source: String
+    var createdAt: Date
+    var updatedAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case preferenceType = "preference_type"
+        case attribute
+        case value
+        case confidence
+        case source
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
+}
+
+enum PreferenceType: String, Codable {
+    case strongYes = "strong_yes"
+    case softYes = "soft_yes"
+    case softNo = "soft_no"
+    case hardNo = "hard_no"
+    case inferred
 }
 

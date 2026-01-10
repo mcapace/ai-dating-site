@@ -17,8 +17,8 @@ struct EditNeighborhoodsView: View {
                 // Selected count
                 HStack {
                     Text("\(viewModel.selectedNeighborhoods.count) selected")
-                        .font(.julBody())
-                        .foregroundColor(.julTextSecondary)
+                        .font(.julBody)
+                        .foregroundColor(.julWarmGray)
 
                     Spacer()
 
@@ -26,18 +26,18 @@ struct EditNeighborhoodsView: View {
                         Button("Clear all") {
                             viewModel.clearAll()
                         }
-                        .font(.julBodySmall())
+                        .font(.julBodySmall)
                         .foregroundColor(.julTerracotta)
                     }
                 }
-                .padding(.horizontal, Spacing.lg)
-                .padding(.vertical, Spacing.sm)
+                .padding(.horizontal, JulesSpacing.screen)
+                .padding(.vertical, JulesSpacing.sm)
                 .background(Color.julCream)
 
                 Divider()
 
                 ScrollView {
-                    VStack(spacing: Spacing.lg) {
+                    VStack(spacing: JulesSpacing.lg) {
                         // City selector (for future multi-city support)
                         if viewModel.availableCities.count > 1 {
                             CitySelector(
@@ -60,8 +60,8 @@ struct EditNeighborhoodsView: View {
                             text: "Jules will look for matches who live in or frequently visit these neighborhoods."
                         )
                     }
-                    .padding(.horizontal, Spacing.lg)
-                    .padding(.vertical, Spacing.md)
+                    .padding(.horizontal, JulesSpacing.screen)
+                    .padding(.vertical, JulesSpacing.md)
                 }
                 .background(Color.julCream)
             }
@@ -70,7 +70,7 @@ struct EditNeighborhoodsView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") { dismiss() }
-                        .foregroundColor(.julTextSecondary)
+                        .foregroundColor(.julWarmGray)
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -80,7 +80,7 @@ struct EditNeighborhoodsView: View {
                             dismiss()
                         }
                     }
-                    .font(.julButton())
+                    .font(.julButton)
                     .foregroundColor(.julTerracotta)
                     .disabled(viewModel.selectedNeighborhoods.isEmpty)
                 }
@@ -91,34 +91,34 @@ struct EditNeighborhoodsView: View {
 
 // MARK: - City Selector
 struct CitySelector: View {
-    let cities: [String]
-    @Binding var selectedCity: String?
+    let cities: [City]
+    @Binding var selectedCity: City?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
+        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
             Text("City")
-                .font(.julLabelSmall())
-                .foregroundColor(.julTextSecondary)
+                .font(.julCaption)
+                .foregroundColor(.julWarmGray)
 
             Menu {
-                ForEach(cities, id: \.self) { city in
-                    Button(city) {
+                ForEach(cities) { city in
+                    Button(city.name) {
                         selectedCity = city
                     }
                 }
             } label: {
                 HStack {
-                    Text(selectedCity ?? "Select city")
-                        .font(.julBody())
-                        .foregroundColor(selectedCity != nil ? .julTextPrimary : .julTextSecondary)
+                    Text(selectedCity?.name ?? "Select city")
+                        .font(.julBody)
+                        .foregroundColor(selectedCity != nil ? .julWarmBlack : .julWarmGray)
                     Spacer()
                     Image(systemName: "chevron.down")
                         .font(.system(size: 12))
-                        .foregroundColor(.julTextSecondary)
+                        .foregroundColor(.julWarmGray)
                 }
-                .padding(Spacing.md)
-                .background(Color.julCardBackground)
-                .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+                .padding(JulesSpacing.md)
+                .background(Color.julCard)
+                .clipShape(RoundedRectangle(cornerRadius: JulesRadius.input))
             }
         }
     }
@@ -136,17 +136,17 @@ struct NeighborhoodGroupSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
+        VStack(alignment: .leading, spacing: JulesSpacing.sm) {
             // Group Header
             Button(action: { withAnimation { isExpanded.toggle() } }) {
                 HStack {
                     Text(group.name)
-                        .font(.julHeadline3())
-                        .foregroundColor(.julTextPrimary)
+                        .font(.julTitle3)
+                        .foregroundColor(.julWarmBlack)
 
                     if selectedCount > 0 {
                         Text("(\(selectedCount))")
-                            .font(.julLabelSmall())
+                            .font(.julCaption)
                             .foregroundColor(.julTerracotta)
                     }
 
@@ -154,13 +154,13 @@ struct NeighborhoodGroupSection: View {
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                         .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.julTextSecondary)
+                        .foregroundColor(.julWarmGray)
                 }
             }
 
             // Neighborhoods
             if isExpanded {
-                FlowLayout(spacing: Spacing.xs) {
+                FlowLayout(spacing: JulesSpacing.xs) {
                     ForEach(group.neighborhoods) { neighborhood in
                         NeighborhoodChip(
                             neighborhood: neighborhood,
@@ -172,9 +172,9 @@ struct NeighborhoodGroupSection: View {
                 }
             }
         }
-        .padding(Spacing.md)
-        .background(Color.julCardBackground)
-        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+        .padding(JulesSpacing.md)
+        .background(Color.julCard)
+        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.medium))
     }
 
     private func toggleSelection(_ id: String) {
@@ -188,18 +188,18 @@ struct NeighborhoodGroupSection: View {
 
 // MARK: - Neighborhood Chip
 struct NeighborhoodChip: View {
-    let neighborhood: SimpleNeighborhood
+    let neighborhood: Neighborhood
     let isSelected: Bool
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             Text(neighborhood.name)
-                .font(.julBody())
-                .foregroundColor(isSelected ? .white : .julTextPrimary)
-                .padding(.horizontal, Spacing.md)
-                .padding(.vertical, Spacing.sm)
-                .background(isSelected ? Color.julTextPrimary : Color.julCream)
+                .font(.julBody)
+                .foregroundColor(isSelected ? .white : .julWarmBlack)
+                .padding(.horizontal, JulesSpacing.md)
+                .padding(.vertical, JulesSpacing.sm)
+                .background(isSelected ? Color.julWarmBlack : Color.julInputBackground)
                 .clipShape(Capsule())
         }
     }
@@ -211,42 +211,34 @@ struct InfoCard: View {
     let text: String
 
     var body: some View {
-        HStack(alignment: .top, spacing: Spacing.sm) {
+        HStack(alignment: .top, spacing: JulesSpacing.sm) {
             Image(systemName: icon)
                 .font(.system(size: 16))
                 .foregroundColor(.julTerracotta)
 
             Text(text)
-                .font(.julLabelSmall())
-                .foregroundColor(.julTextSecondary)
+                .font(.julCaption)
+                .foregroundColor(.julWarmGray)
                 .lineSpacing(3)
         }
-        .padding(Spacing.md)
+        .padding(JulesSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.julTerracotta.opacity(0.08))
-        .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+        .clipShape(RoundedRectangle(cornerRadius: JulesRadius.small))
     }
-}
-
-// MARK: - Simple Neighborhood Model (for this view only)
-struct SimpleNeighborhood: Identifiable {
-    let id: String
-    let cityId: String
-    let name: String
-    let isActive: Bool
 }
 
 // MARK: - Neighborhood Group Model
 struct NeighborhoodGroup {
     let name: String
-    let neighborhoods: [SimpleNeighborhood]
+    let neighborhoods: [Neighborhood]
 }
 
 // MARK: - View Model
 @MainActor
 class EditNeighborhoodsViewModel: ObservableObject {
-    @Published var availableCities: [String] = []
-    @Published var selectedCity: String?
+    @Published var availableCities: [City] = []
+    @Published var selectedCity: City?
     @Published var neighborhoodGroups: [NeighborhoodGroup] = []
     @Published var selectedNeighborhoods: Set<String> = []
 
@@ -255,66 +247,63 @@ class EditNeighborhoodsViewModel: ObservableObject {
     }
 
     private func loadData() {
-        // For now, only NYC is available
-        availableCities = ["New York City"]
-        selectedCity = "New York City"
-        
         // NYC neighborhoods grouped by area
+        // Note: Using approximate coordinates for NYC neighborhoods
         neighborhoodGroups = [
             NeighborhoodGroup(
                 name: "Manhattan - Downtown",
                 neighborhoods: [
-                    SimpleNeighborhood(id: "tribeca", cityId: "nyc", name: "Tribeca", isActive: true),
-                    SimpleNeighborhood(id: "soho", cityId: "nyc", name: "SoHo", isActive: true),
-                    SimpleNeighborhood(id: "west_village", cityId: "nyc", name: "West Village", isActive: true),
-                    SimpleNeighborhood(id: "east_village", cityId: "nyc", name: "East Village", isActive: true),
-                    SimpleNeighborhood(id: "lower_east_side", cityId: "nyc", name: "Lower East Side", isActive: true),
-                    SimpleNeighborhood(id: "financial_district", cityId: "nyc", name: "Financial District", isActive: true),
-                    SimpleNeighborhood(id: "chelsea", cityId: "nyc", name: "Chelsea", isActive: true),
-                    SimpleNeighborhood(id: "greenwich_village", cityId: "nyc", name: "Greenwich Village", isActive: true)
+                    Neighborhood(id: "tribeca", cityId: "nyc", name: "Tribeca", displayName: "Tribeca", latitude: 40.7163, longitude: -74.0086),
+                    Neighborhood(id: "soho", cityId: "nyc", name: "SoHo", displayName: "SoHo", latitude: 40.7231, longitude: -74.0026),
+                    Neighborhood(id: "west_village", cityId: "nyc", name: "West Village", displayName: "West Village", latitude: 40.7358, longitude: -74.0035),
+                    Neighborhood(id: "east_village", cityId: "nyc", name: "East Village", displayName: "East Village", latitude: 40.7265, longitude: -73.9815),
+                    Neighborhood(id: "lower_east_side", cityId: "nyc", name: "Lower East Side", displayName: "Lower East Side", latitude: 40.7150, longitude: -73.9843),
+                    Neighborhood(id: "financial_district", cityId: "nyc", name: "Financial District", displayName: "Financial District", latitude: 40.7074, longitude: -74.0113),
+                    Neighborhood(id: "chelsea", cityId: "nyc", name: "Chelsea", displayName: "Chelsea", latitude: 40.7465, longitude: -74.0014),
+                    Neighborhood(id: "greenwich_village", cityId: "nyc", name: "Greenwich Village", displayName: "Greenwich Village", latitude: 40.7336, longitude: -74.0027)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Manhattan - Midtown",
                 neighborhoods: [
-                    SimpleNeighborhood(id: "midtown_east", cityId: "nyc", name: "Midtown East", isActive: true),
-                    SimpleNeighborhood(id: "midtown_west", cityId: "nyc", name: "Midtown West", isActive: true),
-                    SimpleNeighborhood(id: "hells_kitchen", cityId: "nyc", name: "Hell's Kitchen", isActive: true),
-                    SimpleNeighborhood(id: "gramercy", cityId: "nyc", name: "Gramercy", isActive: true),
-                    SimpleNeighborhood(id: "flatiron", cityId: "nyc", name: "Flatiron", isActive: true),
-                    SimpleNeighborhood(id: "murray_hill", cityId: "nyc", name: "Murray Hill", isActive: true)
+                    Neighborhood(id: "midtown_east", cityId: "nyc", name: "Midtown East", displayName: "Midtown East", latitude: 40.7549, longitude: -73.9840),
+                    Neighborhood(id: "midtown_west", cityId: "nyc", name: "Midtown West", displayName: "Midtown West", latitude: 40.7549, longitude: -73.9840),
+                    Neighborhood(id: "hells_kitchen", cityId: "nyc", name: "Hell's Kitchen", displayName: "Hell's Kitchen", latitude: 40.7638, longitude: -73.9918),
+                    Neighborhood(id: "gramercy", cityId: "nyc", name: "Gramercy", displayName: "Gramercy", latitude: 40.7368, longitude: -73.9849),
+                    Neighborhood(id: "flatiron", cityId: "nyc", name: "Flatiron", displayName: "Flatiron", latitude: 40.7411, longitude: -73.9897),
+                    Neighborhood(id: "murray_hill", cityId: "nyc", name: "Murray Hill", displayName: "Murray Hill", latitude: 40.7479, longitude: -73.9757)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Manhattan - Uptown",
                 neighborhoods: [
-                    SimpleNeighborhood(id: "upper_east_side", cityId: "nyc", name: "Upper East Side", isActive: true),
-                    SimpleNeighborhood(id: "upper_west_side", cityId: "nyc", name: "Upper West Side", isActive: true),
-                    SimpleNeighborhood(id: "harlem", cityId: "nyc", name: "Harlem", isActive: true),
-                    SimpleNeighborhood(id: "morningside_heights", cityId: "nyc", name: "Morningside Heights", isActive: true)
+                    Neighborhood(id: "upper_east_side", cityId: "nyc", name: "Upper East Side", displayName: "Upper East Side", latitude: 40.7736, longitude: -73.9566),
+                    Neighborhood(id: "upper_west_side", cityId: "nyc", name: "Upper West Side", displayName: "Upper West Side", latitude: 40.7870, longitude: -73.9754),
+                    Neighborhood(id: "harlem", cityId: "nyc", name: "Harlem", displayName: "Harlem", latitude: 40.8079, longitude: -73.9454),
+                    Neighborhood(id: "morningside_heights", cityId: "nyc", name: "Morningside Heights", displayName: "Morningside Heights", latitude: 40.8080, longitude: -73.9620)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Brooklyn",
                 neighborhoods: [
-                    SimpleNeighborhood(id: "williamsburg", cityId: "nyc", name: "Williamsburg", isActive: true),
-                    SimpleNeighborhood(id: "dumbo", cityId: "nyc", name: "DUMBO", isActive: true),
-                    SimpleNeighborhood(id: "brooklyn_heights", cityId: "nyc", name: "Brooklyn Heights", isActive: true),
-                    SimpleNeighborhood(id: "cobble_hill", cityId: "nyc", name: "Cobble Hill", isActive: true),
-                    SimpleNeighborhood(id: "park_slope", cityId: "nyc", name: "Park Slope", isActive: true),
-                    SimpleNeighborhood(id: "fort_greene", cityId: "nyc", name: "Fort Greene", isActive: true),
-                    SimpleNeighborhood(id: "greenpoint", cityId: "nyc", name: "Greenpoint", isActive: true),
-                    SimpleNeighborhood(id: "bushwick", cityId: "nyc", name: "Bushwick", isActive: true),
-                    SimpleNeighborhood(id: "prospect_heights", cityId: "nyc", name: "Prospect Heights", isActive: true)
+                    Neighborhood(id: "williamsburg", cityId: "nyc", name: "Williamsburg", displayName: "Williamsburg", latitude: 40.7081, longitude: -73.9571),
+                    Neighborhood(id: "dumbo", cityId: "nyc", name: "DUMBO", displayName: "DUMBO", latitude: 40.7033, longitude: -73.9881),
+                    Neighborhood(id: "brooklyn_heights", cityId: "nyc", name: "Brooklyn Heights", displayName: "Brooklyn Heights", latitude: 40.6962, longitude: -73.9973),
+                    Neighborhood(id: "cobble_hill", cityId: "nyc", name: "Cobble Hill", displayName: "Cobble Hill", latitude: 40.6865, longitude: -73.9962),
+                    Neighborhood(id: "park_slope", cityId: "nyc", name: "Park Slope", displayName: "Park Slope", latitude: 40.6712, longitude: -73.9776),
+                    Neighborhood(id: "fort_greene", cityId: "nyc", name: "Fort Greene", displayName: "Fort Greene", latitude: 40.6893, longitude: -73.9749),
+                    Neighborhood(id: "greenpoint", cityId: "nyc", name: "Greenpoint", displayName: "Greenpoint", latitude: 40.7295, longitude: -73.9545),
+                    Neighborhood(id: "bushwick", cityId: "nyc", name: "Bushwick", displayName: "Bushwick", latitude: 40.6943, longitude: -73.9212),
+                    Neighborhood(id: "prospect_heights", cityId: "nyc", name: "Prospect Heights", displayName: "Prospect Heights", latitude: 40.6776, longitude: -73.9690)
                 ]
             ),
             NeighborhoodGroup(
                 name: "Other Boroughs",
                 neighborhoods: [
-                    SimpleNeighborhood(id: "astoria", cityId: "nyc", name: "Astoria", isActive: true),
-                    SimpleNeighborhood(id: "long_island_city", cityId: "nyc", name: "Long Island City", isActive: true),
-                    SimpleNeighborhood(id: "jersey_city", cityId: "nyc", name: "Jersey City", isActive: true),
-                    SimpleNeighborhood(id: "hoboken", cityId: "nyc", name: "Hoboken", isActive: true)
+                    Neighborhood(id: "astoria", cityId: "nyc", name: "Astoria", displayName: "Astoria", latitude: 40.7644, longitude: -73.9235),
+                    Neighborhood(id: "long_island_city", cityId: "nyc", name: "Long Island City", displayName: "Long Island City", latitude: 40.7448, longitude: -73.9485),
+                    Neighborhood(id: "jersey_city", cityId: "nyc", name: "Jersey City", displayName: "Jersey City", latitude: 40.7178, longitude: -74.0431),
+                    Neighborhood(id: "hoboken", cityId: "nyc", name: "Hoboken", displayName: "Hoboken", latitude: 40.7439, longitude: -74.0324)
                 ]
             )
         ]
