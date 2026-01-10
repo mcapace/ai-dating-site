@@ -55,6 +55,16 @@ class SupabaseManager {
         case dateFeedback = "date_feedback"
         case sparkPrompts = "spark_prompts"
         case notifications
+
+        // Preference Learning (Jules learns from behavior)
+        case matchSignals = "match_signals"
+        case preferencePatterns = "preference_patterns"
+        case tasteProfiles = "taste_profiles"
+        case exploratoryMatches = "exploratory_matches"
+
+        // Tokens & Credits
+        case userTokens = "user_tokens"
+        case priorityPassUsage = "priority_pass_usage"
     }
 
     // MARK: - Storage Buckets
